@@ -32,18 +32,26 @@ define([
             this.loadQuestions();
         },
 
+        /**
+         *  Call to start the interview.  Begins the timer and says
+         *  an introduction.
+         */
         beginInterview: function () {
             var self = this;
             var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question. This is my question: ";
-            var question = document.getElementById('question-prompt').innerHTML;
             this.addMessage(intro); // TODO ADD THIS BACK IN. (i removed it b/c annoying)
-            this.editor.runAndTest();
 
             this.timer.runTimer(function () {
                 self.addMessage("Time is up!  We'll get back to you in a few days.");
             });
         },
 
+        /**
+         *  Loads questions from the server, saving them in the class variable
+         *  questions, which is an array.  If the request fails, a default
+         *  set of arrays is made.  Either way, the first question in the
+         *  list is then given to the user.
+         */
         loadQuestions: function () {
             var self = this;
             this.nextQuestion = 0;
@@ -56,12 +64,20 @@ define([
             });
         },
 
+        /**
+         *  Asks the user the next question in the list.  It is an error to
+         *  call this function if there are no questions left.
+         */
         getNextQuestion: function () {
             this.getNextQuestionOr(function () {
                 console.log("ERROR IN Interviewer.getNextQuestion()");
             });
         },
 
+        /**
+         *  Gets the next question in the list, or calls the callback function
+         *  if there are no questions left.
+         */
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
                 var question = this.questions[this.nextQuestion++];
@@ -72,21 +88,29 @@ define([
             }
         },
 
+        /**
+         *  Gives a message (a string) to the user.
+         */
         addMessage: function (message) {
             this.textBox.addMessage(message);
         },
 
+        /**
+         *  Evaluates the user's answer.  Gives feedback, and moves on to the
+         *  next question if the answer was correct.
+         */
         evaluateAnswer: function () {
-            var failedCases = this.editor.runAndTest();
-            this.addMessage("YOUR ANSWER SUCKS");
+            this.editor.runAndTest(function (data) {
+                this.addMessage("YOUR ANSWER SUCKS");
 
-            if (failedCases.length > 0) {
-                this.addMessage("I think you may have missed something.");
-            } else {
-                this.getNextQuestionOr(function () {
-                    this.addMessage("Good job!  You're all done!")
-                });
-            }
+                if (failedCases.length > 0) {
+                    this.addMessage("I think you may have missed something.");
+                } else {
+                    this.getNextQuestionOr(function () {
+                        this.addMessage("Good job!  You're all done!")
+                    });
+                }
+            });
         }
     });
 
