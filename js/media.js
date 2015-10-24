@@ -22,7 +22,6 @@ function gotSources(sourceInfos) {
         (audioSelect.length + 1);
       audioSelect.appendChild(option);
     } else {
-      console.log('Some other kind of source: ', sourceInfo);
     }
   }
 }
@@ -143,7 +142,6 @@ var leftchannel = [];
 var rightchannel = [];
 var recorder = null;
 function setUpStream(stream) {
-    console.log('setting up stream');
     var context = ac;
     // retrieve the current sample rate to be used for WAV packaging
     sampleRate = context.sampleRate;
@@ -166,7 +164,7 @@ function setUpStream(stream) {
 
     count = 0;
     recorder.onaudioprocess = function(e){
-        console.log ('recording');
+        //console.log ('recording');
         var left = e.inputBuffer.getChannelData(0);
         var right = e.inputBuffer.getChannelData(1);
         // we clone the samples

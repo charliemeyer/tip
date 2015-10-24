@@ -55,8 +55,9 @@ define([
         loadQuestions: function () {
             var self = this;
             this.nextQuestion = 0;
-            request.post("/questions.json").then(function (response) {
-                self.questions = response;
+            request.get("/questions.json").then(function (response) {
+                self.questions = JSON.parse(response);
+                console.log(self.questions);
                 self.getNextQuestion();
             }, function (error) {
                 self.questions = [{
@@ -138,13 +139,16 @@ define([
             var self = this;
                 self.generateComment();
             this.editor.runAndTest(function (data) {
-                self.addMessage("YOUR ANSWER SUCKS");
+
+                // TODO: assign failedCases
+                console.log(data);
+                // check test cases
 
                 if (failedCases.length > 0) {
                     self.addMessage("I think you may have missed something.");
                 } else {
                     self.getNextQuestionOr(function () {
-                        self.addMessage("Good job!  You're all done!")
+                        self.addMessage("Good job! You're all done!")
                     });
                 }
             });
