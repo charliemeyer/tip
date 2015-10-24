@@ -41,6 +41,7 @@ define([
             var silentMoments = 0;
             this.waitForUser(5);
             setInterval(function() {
+                self.generateComment();
                 if (media.checkVolume() && self.canBotherUser) {
                     if (silentMoments++ > 5) {
                         self.generateComment();
@@ -166,6 +167,7 @@ define([
 
         getCommentFrom: function (line, number) {
             if (_.contains(this.explainedLines, number)) return;
+            var variables = /(\w*)\s*=/.exec(line);
             if (_.contains(line, "if")) {
                 this.explainedLines.push(number);
                 return choose(["What is that if statement on line " + number + " testing for?",
@@ -174,6 +176,8 @@ define([
                 this.explainedLines.push(number);
                 return choose(["Can you explain the invariant for the loop on line " + number + "?",
                     "What will be the time complexity of the loop on line " + number + "?"]);
+            } else if (variables.length > 1) {
+                return "What are you using " + variables[1] + " for?";
             } else {
                 return false;
             }
