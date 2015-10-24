@@ -21,13 +21,15 @@ class Test(webapp2.RequestHandler):
     def post(self):
         self.response.headers["Access-Control-Allow-Origin"] = "*"
         self.response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
-        self.response.headers["Access-Control-Allow-Methods"] = "POST, GET, PUT"
+        self.response.headers["Access-Control-Allow-Methods"] = "POST, GET, PUT, OPTIONS"
         self.response.headers['Content-Type'] = 'application/json'   
         url = "http://api.hackerrank.com/checker/submission.json"
         logging.warning(self.request.params)
-        data = self.request.params
-        content = urllib2.urlopen(url=url, data=urllib.urlencode(data)).read()
-        logging.warning(content)
+        data = urllib.urlencode(self.request.params)
+        logging.error(data)
+        req = urllib2.Request(url, data)
+        response = urllib2.urlopen(req)
+        content = response.read()
         self.response.out.write(content)
         
 
@@ -35,7 +37,7 @@ class Questions(webapp2.RequestHandler):
     def get(self):
         self.response.headers["Access-Control-Allow-Origin"] = "*"
         self.response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
-        self.response.headers["Access-Control-Allow-Methods"] = "POST, GET, PUT"
+        self.response.headers["Access-Control-Allow-Methods"] = "POST, GET, PUT, OPTIONS"
         self.response.headers['Content-Type'] = 'application/json'   
         questions = ["How fast is sorting?", "How slow is sorting?", "How slow are we at coding?"]
         self.response.out.write(json.dumps(questions))

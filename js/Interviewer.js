@@ -43,7 +43,8 @@ define([
         loadQuestions: function () {
             var self = this;
             this.nextQuestion = 0;
-            request("http://simterview.appspot.com/questions.json").then(function (response) {
+            //request("http://simterview.appspot.com/questions.json").then(function (response) {
+            request("/questions.json").then(function (response) {
                 self.questions = response;
                 self.getNextQuestion();
             }, function (error) {
