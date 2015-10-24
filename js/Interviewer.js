@@ -48,14 +48,17 @@ define([
             var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question.";
             this.addMessage(intro);
 
-            this.timer.runTimer(function () {
-                self.addMessage("Time is up!  We'll get back to you in a few days.");
+            this.timer.runTimer(function (endedSoon) {
+                if (!endedSoon) {
+                    self.addMessage("Time is up!  We'll get back to you in a few days.");
+                }
                 self.endInterview();
             });
         },
 
         endInterview: function () {
             // Hide editor div, fill it with a results div
+            this.timer.stopTimer();
             this.editor.hide();
             this.endscreen.show();
             document.getElementById('bottombar').style.display = 'none';
@@ -159,7 +162,6 @@ define([
                 return str;//str.replace(/ /g,'');
             }
             var self = this;
-                self.generateComment();
             this.editor.runAndTest(this.currentQuestion, function (data) {
                 data = data.result;
                 var failedCases = [];

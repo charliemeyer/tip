@@ -19,6 +19,7 @@ define([
             if (id[0] !== "#") {
                 id = "#" + id;
             }
+            this.paused = false;
             this.domNode = query(id)[0];
             this.domNode.innerHTML = "";
             this.seconds = Math.round(args.minutes * 60 || 1 * 60);
@@ -27,10 +28,10 @@ define([
             var self = this;
             setTimeout(function decrement() {
                 self.seconds -= 1;
-                if (self.seconds >= 0) {
+                if (!this.paused && self.seconds >= 0) {
                     setTimeout(decrement, 1000);
                 } else {
-                    callback();
+                    callback(this.paused);
                     return;
                 }
                 self.renderTime();
