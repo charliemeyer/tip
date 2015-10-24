@@ -2,7 +2,7 @@ define([
         "dojo/_base/declare",
         "dijit/_WidgetBase",
         "dojo/_base/fx",
-        "dojo/query",
+        "dojo/dom",
         "dojo/dom-construct",
         "dojo/dom-geometry",
         "dojo/dom-style",
@@ -13,7 +13,7 @@ define([
         declare,
         _WidgetBase,
         fx,
-        query,
+        dom,
         domConstruct,
         domGeom,
         domStyle,
@@ -25,11 +25,8 @@ define([
         constructor: function (args) {
             args = args || {};
             var id = args.id || "chat-area";
-            if (id[0] !== "#") {
-                id = "#" + id;
-            }
             this.defaultTimeOut = args.defaultTimeOut || 60 * 1000;
-            this.domNode = query(id)[0];
+            this.domNode = dom.byId(id);
         },
 
         addMessage: function (messageText, timeOut) {
@@ -39,18 +36,19 @@ define([
                 "class": "chat-message"
             }, this.domNode);
             var messageHeight = domGeom.getMarginBox(messageBox).h;
-            console.log(messageHeight);
             setTimeout(function () {
                 var fadeOutAnimation = fx.fadeOut({
                         node: messageBox,
-                        duration: 1000
+                        duration: 1000,
+                        onEnd: function () {
+                            domConstruct.destroy(messageBox);
+                        }
                     });
-                on(fadeOutAnimation, "End", function () {
-                    //domConstruct.destroy(messageBox);
-                });
                 fadeOutAnimation.play();
             }, timeOut);
             this._shiftUp(messageHeight, messageBox);
+
+            meSpeak.speak(messageText);
         },
 
         _shiftUp: function (amt, ignore) {
@@ -61,8 +59,6 @@ define([
                 if (!_.includes(ignore, child)) {
                     var bottom = parseInt(domStyle.get(child, "bottom"));
                     domStyle.set(child, "bottom", bottom + amt + "px");
-                    console.log(child);
-                    console.log(bottom, amt)
                 }
             });
         }

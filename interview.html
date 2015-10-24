@@ -14,6 +14,7 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
             data-dojo-config="async: true, parseOnLoad:true" ></script>
+  <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
     <script type="text/javascript">
         require(["dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"]);
         require(["dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dojo/domReady!"],
@@ -28,16 +29,15 @@
                     }).play();
                 }, 500);
         });
-        require(["js/ChatBox"], function (ChatBox) {
-            console.log("fuck colin");
+        require(["js/Interviewer", "js/ChatBox"],
+            function (Interviewer, ChatBox) {
             var chat = new ChatBox({
                 id: "chat-area"
             });
-            chat.addMessage("This is test message 1", 5 * 1000);
-            chat.addMessage("This is test message 2", 5 * 1000);
-            chat.addMessage("This is test message 3", 5 * 1000);
-            chat.addMessage("This is test message 4", 5 * 1000);
-            chat.addMessage("This is test message 5", 5 * 1000);
+            var interviewer = new Interviewer({
+                textBox: chat
+            });
+            meSpeak.speak(document.querySelector('#question-prompt').innerHTML);
         });
         require(["js/Timer"], function (Timer) {
             var timer = new Timer({
@@ -53,17 +53,19 @@
     </script>
 </head>
 <body class="claro">
-    <div id="loadingOverlay" class="loadingOverlay pageOverlay">
-        <div class="loadingMessage">Loading....</div>
+    <div class="pageOverlay">
+        <div id="loadingOverlay">
+            <div class="loadingMessage">Loading....</div>
+        </div>
     </div>
     <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" id="borderContainer" style="height:100%; width=100%;">
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
-            <div id="question-prompt">QUESTION</div>
+            <div id="question-prompt">{{question}}</div>
         </div>
         <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="splitter:true, region:'right'" style="width: 300px;">
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
                 <div id="time-display">
-                    Time Remaining: <span id='timer-area'></span><button id='start-timer'>Pause</button> 
+                    Time Remaining: <span id='timer-area'></span><button id='start-timer'>Pause</button>
                 </div>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
@@ -82,5 +84,14 @@
             }</div>
         </div>
 </div>
+<!-- ignore these -->
+<select id='audioSource' style="display:none;"></select>
+<audio></audio>
+  <script type="text/javascript">
+    meSpeak.loadConfig("js/mespeak/mespeak_config.json");
+    meSpeak.loadVoice("js/mespeak/voices/en/en-us.json");
+  </script>
+<script src='js/media.js'></script>
+
 </body>
 </html>
