@@ -65,15 +65,17 @@ define([
             var lang_map = {"c":1,"c++":2,"java":3,"python":5,"perl":6,"php":7,"Ruby":8,"csharp":9,"mysql":10,"oracle":11,"haskell":12,"clojure":13,"bash":14,"scala":15,"erlang":16,"lua":18,"javascript":20,"go":21,"d":22,"ocaml":23,"r":24,"pascal":25,"sbcl":26,"python3":30,"groovy":31,"objectivec":32,"fsharp":33,"cobol":36,"visualbasic":37,"lolcode":38,"smalltalk":39,"tcl":40,"whitespace":41,"tsql":42,"java8":43,"db2":44,"octave":46,"xquery":48,"racket":49,"rust":50,"swift":51,"fortran":54};
             var boilerplates = {
                 "python": "print " + question.function_name + "(input())"
-            }
+            };
             var language = $("#langoptions").val();
-            var lang = lang_map[language;
+            var lang = lang_map[language];
             var source = this.getValue() + "\n" + boilerplates[language];
             var params = {
                 source: source,
                 lang: lang,
                 api_key: api_key,
-                testcases: question.testcases
+                testcases: _.map(question.testcases, function (elem) {
+                    return elem[0];
+                })
             };
             $.post(base_url, params, function(data){
                 callback(data);
