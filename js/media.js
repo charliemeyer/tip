@@ -13,7 +13,6 @@ navigator.mediaDevices = navigator.mediaDevices || ((navigator.mozGetUserMedia |
 } : null);
 
 function gotSources(sourceInfos) {
-  console.log(sourceInfos);
   for (var i = 0; i !== sourceInfos.length; ++i) {
     var sourceInfo = sourceInfos[i];
     var option = document.createElement('option');
@@ -36,26 +35,28 @@ if (typeof MediaStreamTrack === 'undefined' ||
 }
 
 function successCallback(stream) {
-  window.stream = stream; // make stream available to console
+    window.stream = stream; // make stream available to console
 }
 
 function errorCallback(error) {
-  console.log('navigator.getUserMedia error: ', error);
+    console.log('navigator.getUserMedia error: ', error);
 }
 
+globalVolume = 0;
+
 function printVolume() {
-    console.log(getVolume());
+    globalVolume = getVolume();
+    console.log(globalVolume);
 }
 
 var audio = document.querySelector('audio');
-globalStream = null;
+var globalStream = null;
 function updateVolume(stream) {
+    // set up volume listener
     globalStream = stream;
     audio.src = window.URL.createObjectURL(stream);
     audio.onloadedmetadata = function(e) {
       setInterval(printVolume, 150);
-      console.log(stream.getAudioTracks());
-      console.log(stream);
       audio.play();
     };
 }
@@ -101,7 +102,6 @@ function getVolume() {
     //analyzer.getByteTimeDomainData(myDataArray);
     analyzer.getFloatFrequencyData(myDataArray);
     var vol = 0;
-    //console.log(myDataArray);
     for (var i = 0; i < myDataArray.length; i++) {
       vol += myDataArray[i];
     }
