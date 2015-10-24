@@ -46,7 +46,7 @@ define([
                 "innerHTML": messageText,
                 "class": "chat-message"
             }, this.domNode);
-            var messageHeight = domGeom.getMarginBox(messageBox).h;
+            var messageHeight = domGeom.getMarginBox(messageBox).h + 10;
             setTimeout(function () {
                 var fadeOutAnimation = fx.fadeOut({
                         node: messageBox,

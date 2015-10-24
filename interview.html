@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dijit/themes/claro/claro.css">
     <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -45,7 +45,7 @@
                 id: "chat-area"
             });
             var timer = new Timer({
-                minutes: {{duration}},
+                minutes: 10,
                 id: "timer-area"
             });
             var endscreen = new Endscreen();
@@ -74,7 +74,7 @@
     </div>
     <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" id="borderContainer" style="height:100%; width=100%;">
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
-            <div id="question-prompt" style='height: 75px;'></div>
+            <div id="question-prompt" style='font-size: 18px;'></div>
         </div>
         <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="splitter:true, region:'right'" style="width: 300px;">
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
-                <div id="chat-area"></div>
+                <div id="chat-area"><span style='color: #A2A2A2;'>Interviewer Messages</span></div>
             </div>
         </div>
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">

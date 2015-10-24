@@ -4,7 +4,6 @@ html, body {
     margin: 0;
     overflow: hidden;
     font-family: "Roboto Mono", monospace;
-    /*background-color: #F5F5F5;*/
 }
 
 #layoutContainer {
@@ -24,6 +23,10 @@ button, .button {
 	background-color: #00c853;
 	padding: 5px;
     text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 5px 10px;
+    font-family: "Roboto";
 }
 
 button:hover, .button:hover {
@@ -41,7 +44,12 @@ button:hover, .button:hover {
     padding: 12px 20px;
 }
 
-div {
-    border: none !important;
+select {
+    font-family: "Roboto Mono", monospace;
+    border: 1px solid #B5BCC7;
 }
 
+option {
+    font-family: "Roboto Mono", monospace;
+    border: 1px solid #B5BCC7;
+}
