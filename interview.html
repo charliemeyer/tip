@@ -28,9 +28,13 @@
                     }).play();
                 }, 500);
         });
-        require(["js/ChatBox"], function (ChatBox) {
+        require(["js/Interviewer", "js/ChatBox"],
+            function (Interviewer, ChatBox) {
             var chat = new ChatBox({
                 id: "chat-area"
+            });
+            var interviewer = new Interviewer({
+                textBox: chat
             });
             meSpeak.speak(document.querySelector('#question-prompt').innerHTML);
         });
