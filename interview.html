@@ -17,7 +17,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
     <script type="text/javascript">
+        // This line parses the HTML interface
         require(["dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"]);
+        // This takes care of fading out the loading screen.
         require(["dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dojo/domReady!"],
             function (fx, domStyle, dom) {
                 setTimeout(function () {
@@ -30,20 +32,12 @@
                     }).play();
                 }, 500);
         });
-        require(["js/Editor", "dojo/domReady!"], function (Editor) {
+        // Starts the app
+        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "dojo/domReady!"],
+            function (Interviewer, ChatBox, Timer, Editor) {
             editor = new Editor({
                 editor: "editor"
             });
-            // Charlie's sick jquery code fuck this dojo bozo
-            $("#syntaxhelp").change(function(){
-                editor.getSession().setUseWorker($(this).prop("checked"));
-            });
-            $("#langoptions").change(function(){
-                editor.session.setMode("ace/mode/" + $(this).val());
-            });
-        });
-        require(["js/Interviewer", "js/ChatBox", "js/Timer"],
-            function (Interviewer, ChatBox, Timer) {
             var chat = new ChatBox({
                 id: "chat-area"
             });
@@ -56,9 +50,14 @@
                 timer: timer,
                 editor: editor
             });
-            setTimeout(function() {
-                editor.playback()
-            }, 15000);
+            // Charlie's sick jquery code fuck this dojo bozo
+            $("#syntaxhelp").change(function(){
+                editor.getSession().setUseWorker($(this).prop("checked"));
+            });
+            $("#langoptions").change(function(){
+                editor.session.setMode("ace/mode/" + $(this).val());
+            });
+            interviewer.beginInterview();
         });
     </script>
 </head>

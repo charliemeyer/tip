@@ -21,6 +21,11 @@ define([
         _
     ) {
 
+    /**
+     *  A ChatBox class keeps a list of messages that scroll up from the
+     *  bottom.  Messages fade out after some time.  Messages are read
+     *  aloud when they are added to the chat.
+     */
     var ChatBox = declare([_WidgetBase], {
         constructor: function (args) {
             args = args || {};
@@ -30,6 +35,11 @@ define([
             this.speakingQueue = [];
         },
 
+        /**
+         *  Adds a message to the chat box.  The second parameter is optional;
+         *  if omitted, a default timeout is used.  The message will be read
+         *  aloud once all previous messages have been read.
+         */
         addMessage: function (messageText, timeOut) {
             timeOut = timeOut || this.defaultTimeOut;
             var messageBox = domConstruct.create("div", {
@@ -52,6 +62,12 @@ define([
             this._addToQueue(messageText);
         },
 
+        /**
+         *  Adds a given message to the queue of things to be read aloud.
+         *  If there is nothing else in the queue, it will be read; otherwise
+         *  it will be read only after the messages before it in the queue
+         *  are read.
+         */
         _addToQueue: function (message) {
             var self = this;
             this.speakingQueue.push(message);
@@ -66,6 +82,12 @@ define([
             }
         },
 
+        /**
+         *  Physically shifts the child nodes upwards by a particular amount.
+         *  Used to make room for new messages in the queue.  amt is the
+         *  amount, in pixels, to shift items up.  ignore is an optional node
+         *  or list of nodes to --not-- shift.
+         */
         _shiftUp: function (amt, ignore) {
             if (!_.isArray(ignore)) {
                 ignore = [ignore];
