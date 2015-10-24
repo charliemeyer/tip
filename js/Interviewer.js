@@ -32,6 +32,7 @@ define([
             this.endscreen.registerEditor(this.editor);
             this.questions = [];
             this.nextQuestion = 0;
+            this.currentQuestion = null;
 
             on(dom.byId("user-input-button"), "click", lang.hitch(this, this.evaluateAnswer));
 
@@ -99,11 +100,11 @@ define([
          */
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
-                var question = this.questions[this.nextQuestion++];
+                this.currentQuestion = this.questions[this.nextQuestion++];
                 var message = "Please write a function called " + question.function_name + " that should do the following:";
                 this.addMessage(message);
-                this.addMessage(question.desc);
-                dom.byId("question-prompt").innerHTML = question.question;
+                this.addMessage(this.currentQuestion.desc);
+                dom.byId("question-prompt").innerHTML = this.currentQuestion.question;
             } else {
                 callback.call(this);
             }
@@ -164,7 +165,7 @@ define([
                 var failedCases = [];
                 var numSuccesses = 0;
                 _.each(data.stdout, function (output, testnum) {
-                    if (removeWhiteSpace(output) === removeWhiteSpace(self.questions[testnum][1])) {
+                    if (removeWhiteSpace(output) === removeWhiteSpace(self.currentQuestion[testnum][1])) {
                         ++numSuccesses;
                     } else {
                         failedCases.push(testnum);
