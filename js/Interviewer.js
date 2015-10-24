@@ -1,11 +1,17 @@
 define([
         "dojo/_base/declare",
+        "dojo/_base/lang",
         "dojo/request",
+        "dojo/dom",
+        "dojo/on",
         "js/lodash",
         "dojo/domReady!"
     ], function (
         declare,
+        lang,
         request,
+        dom,
+        on,
         _
     ) {
 
@@ -14,8 +20,12 @@ define([
             this.textBox = args.textBox;
             this.timer = args.timer;
             this.editor = args.editor;
+            this.questions = [];
+            this.nextQuestion = 0;
 
-            this.getQuestions();
+            on(dom.byId("user-input-button"), "click", lang.hitch(this, this.evaluateAnswer));
+
+            this.loadQuestions();
         },
 
         beginInterview: function () {
@@ -23,8 +33,6 @@ define([
             var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question. This is my question: ";
             var question = document.getElementById('question-prompt').innerHTML;
             this.addMessage(intro); // TODO ADD THIS BACK IN. (i removed it b/c annoying)
-            this.addMessage(question);
-            this.addMessage("Charlie is the prettiest person in the world");
             this.editor.runAndTest();
 
             this.timer.runTimer(function () {
@@ -32,17 +40,48 @@ define([
             });
         },
 
-        getQuestions: function () {
-            request("/questions.json").then(function (response) {
-                console.log(response);
+        loadQuestions: function () {
+            var self = this;
+            this.nextQuestion = 0;
+            request("http://simterview.appspot.com/questions.json").then(function (response) {
+                self.questions = response;
+                self.getNextQuestion();
             }, function (error) {
-                console.log("ERROR");
-                console.log(error);
+                self.questions = ["WHAT IS SORTING?"];
+                self.getNextQuestion();
             });
+        },
+
+        getNextQuestion: function () {
+            this.getNextQuestionOr(function () {
+                console.log("ERROR IN Interviewer.getNextQuestion()");
+            });
+        },
+
+        getNextQuestionOr: function (callback) {
+            if (this.nextQuestion < this.questions.length) {
+                var question = this.questions[this.nextQuestion++];
+                this.addMessage(question);
+                dom.byId("question-prompt").innerHTML = question;
+            } else {
+                callback.call(this);
+            }
         },
 
         addMessage: function (message) {
             this.textBox.addMessage(message);
+        },
+
+        evaluateAnswer: function () {
+            var failedCases = this.editor.runAndTest();
+            this.addMessage("YOUR ANSWER SUCKS");
+            if (failedCases.length > 0) {
+                this.addMessage("I think you may have missed something.");
+            } else {
+                this.getNextQuestionOr(function () {
+                    this.addMessage("Good job!  You're all done!")
+                });
+            }
         }
     });
 
