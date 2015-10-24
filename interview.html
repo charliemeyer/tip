@@ -30,8 +30,8 @@
                     }).play();
                 }, 500);
         });
-        require(["js/Interviewer", "js/ChatBox", "js/Timer"],
-            function (Interviewer, ChatBox, Timer) {
+        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "dojo/domReady!"],
+            function (Interviewer, ChatBox, Timer, Editor) {
             var chat = new ChatBox({
                 id: "chat-area"
             });
@@ -39,16 +39,15 @@
                 minutes: 15,
                 id: "timer-area"
             });
-            var interviewer = new Interviewer({
-                textBox: chat,
-                timer: timer
-            });
-            meSpeak.speak(document.querySelector('#question-prompt').innerHTML);
-        });
-        require(["js/Editor", "dojo/domReady!"], function (Editor) {
             var editor = new Editor({
                 editor: "editor"
             });
+            var interviewer = new Interviewer({
+                textBox: chat,
+                timer: timer,
+                editor: editor
+            });
+            interviewer.beginInterview();
             // Charlie's sick jquery code fuck this dojo bozo
             $("#syntaxhelp").change(function(){
                 editor.getSession().setUseWorker($(this).prop("checked"));
@@ -59,6 +58,7 @@
         });
     </script>
 </head>
+
 <body class="claro">
     <div class="pageOverlay">
         <div id="loadingOverlay">

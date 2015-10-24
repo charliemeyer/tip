@@ -1,6 +1,7 @@
 define([
         "dojo/_base/declare",
         "dojo/_base/lang",
+        "dojo/on",
         "js/lodash"
     ], function (
         declare,
@@ -23,10 +24,11 @@ define([
                 var code_value = self.getValue();
                 changelog.push([timediff, code_value]);
             });
+
         },
 
         runAndTest: function () {
-            var code = this.getValue()
+            var code = this.getValue();
         }
     });
 

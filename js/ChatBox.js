@@ -27,6 +27,7 @@ define([
             var id = args.id || "chat-area";
             this.defaultTimeOut = args.defaultTimeOut || 60 * 1000;
             this.domNode = dom.byId(id);
+            this.speakingQueue = [];
         },
 
         addMessage: function (messageText, timeOut) {
@@ -48,7 +49,21 @@ define([
             }, timeOut);
             this._shiftUp(messageHeight, messageBox);
 
-            meSpeak.speak(messageText);
+            this._addToQueue(messageText);
+        },
+
+        _addToQueue: function (message) {
+            var self = this;
+            this.speakingQueue.push(message);
+            if (this.speakingQueue.length === 1) {
+                meSpeak.speak(message, {}, function removeFromQueue() {
+                    self.speakingQueue.shift();
+                    if (self.speakingQueue.length > 0) {
+                        message = self.speakingQueue[0];
+                        meSpeak.speak(message, {}, removeFromQueue);
+                    }
+                });
+            }
         },
 
         _shiftUp: function (amt, ignore) {
