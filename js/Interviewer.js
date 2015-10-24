@@ -75,6 +75,7 @@ define([
         evaluateAnswer: function () {
             var failedCases = this.editor.runAndTest();
             this.addMessage("YOUR ANSWER SUCKS");
+
             if (failedCases.length > 0) {
                 this.addMessage("I think you may have missed something.");
             } else {
