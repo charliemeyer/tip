@@ -24,16 +24,15 @@ define([
             this.domNode.innerHTML = "FUCK";
             this.seconds = args.minutes * 60 || 1 * 60;
             this.paused = false;
-            this.runTimer();
         },
-        runTimer: function() {
+        runTimer: function(callback) {
             var self = this;
             setTimeout(function decrement() {
                 self.seconds -= 1;
                 if (!self.paused && self.seconds >= 0) {
                     setTimeout(decrement, 1000);
                 } else {
-                    alert("Times Up!");
+                    callback();
                     return;
                 }
                 self.renderTime();

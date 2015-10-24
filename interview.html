@@ -15,7 +15,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
             data-dojo-config="async: true, parseOnLoad:true" ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
+    <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
     <script type="text/javascript">
         require(["dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"]);
         require(["dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dojo/domReady!"],
@@ -30,27 +30,27 @@
                     }).play();
                 }, 500);
         });
-        require(["js/Interviewer", "js/ChatBox"],
-            function (Interviewer, ChatBox) {
+        require(["js/Interviewer", "js/ChatBox", "js/Timer"],
+            function (Interviewer, ChatBox, Timer) {
             var chat = new ChatBox({
                 id: "chat-area"
             });
-            var interviewer = new Interviewer({
-                textBox: chat
-            });
-            meSpeak.speak(document.querySelector('#question-prompt').innerHTML);
-        });
-        require(["js/Timer"], function (Timer) {
             var timer = new Timer({
                 id: "timer-area"
             });
+            var interviewer = new Interviewer({
+                textBox: chat,
+                timer: timer
+            });
+            meSpeak.speak(document.querySelector('#question-prompt').innerHTML);
         });
-
-        // Charlie's sick jquery code fuck this dojo bozo 
-        $(document).ready(function(){
-            var editor = ace.edit("editor");
+        require(["js/Editor", "dojo/domReady!"], function (Editor) {
+            var editor = new Editor({
+                editor: "editor"
+            });
             editor.setTheme("ace/theme/clouds");
             editor.session.setMode("ace/mode/javascript");
+            // Charlie's sick jquery code fuck this dojo bozo 
             $("#syntaxhelp").change(function(){
                 editor.getSession().setUseWorker($(this).prop("checked"));
             });
