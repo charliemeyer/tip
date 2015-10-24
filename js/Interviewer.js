@@ -59,7 +59,12 @@ define([
                 self.questions = response;
                 self.getNextQuestion();
             }, function (error) {
-                self.questions = ["WHAT IS SORTING?"];
+                self.questions = [{
+                    function_name: "sort(list, length)",
+                    question: "Sort a list",
+                    desc: "Sort a list of numbers.",
+                    testcases: ["1, 2, 3"]
+                }];
                 self.getNextQuestion();
             });
         },
@@ -81,8 +86,10 @@ define([
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
                 var question = this.questions[this.nextQuestion++];
-                this.addMessage(question);
-                dom.byId("question-prompt").innerHTML = question;
+                var message = "Please write a function called " + question.function_name + " that should do the following:";
+                this.addMessage(message);
+                this.addMessage(question.desc);
+                dom.byId("question-prompt").innerHTML = question.question;
             } else {
                 callback.call(this);
             }
@@ -96,18 +103,48 @@ define([
         },
 
         /**
+         *  Searches code near where the user is typing to see if there's
+         *  something that can be commented on.
+         */
+        generateComment: function () {
+            var row = this.editor.getCursorPosition().row;
+            var lines = this.editor.getValue().split("\n");
+            console.log(row);
+            var comment = false;
+            while (row > 0 && !comment) {
+                comment = this.getCommentFrom(lines[row], row + 1);
+                row--;
+            }
+            if (comment) {
+                this.addMessage(comment);
+            }
+        },
+
+        getCommentFrom: function (line, number) {
+            if (_.contains(line, "if")) {
+                return "What is that if statement on line " + number + " testing for?";
+            } else if (_.contains(line, "while") || _.contains(line, "for")) {
+                return "Can you explain the loop invarient for the loop on line " + number + "?";
+            } else {
+                return false;
+            }
+        },
+
+        /**
          *  Evaluates the user's answer.  Gives feedback, and moves on to the
          *  next question if the answer was correct.
          */
         evaluateAnswer: function () {
+            var self = this;
+                self.generateComment();
             this.editor.runAndTest(function (data) {
-                this.addMessage("YOUR ANSWER SUCKS");
+                self.addMessage("YOUR ANSWER SUCKS");
 
                 if (failedCases.length > 0) {
-                    this.addMessage("I think you may have missed something.");
+                    self.addMessage("I think you may have missed something.");
                 } else {
-                    this.getNextQuestionOr(function () {
-                        this.addMessage("Good job!  You're all done!")
+                    self.getNextQuestionOr(function () {
+                        self.addMessage("Good job!  You're all done!")
                     });
                 }
             });

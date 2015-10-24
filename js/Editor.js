@@ -68,9 +68,9 @@ define([
                 testcases: '["1"]'
             };
             $.post(base_url, params, function(data){
-                alert(data);
+                //alert(data);
                 callback(data);
-            }).fail(alert("failed to check code"));
+            }).fail(/*alert("failed to check code")*/);
         }
     });
 
