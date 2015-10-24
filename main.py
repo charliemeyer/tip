@@ -53,8 +53,8 @@ fast as possible. Example: [7,2,6,1,3,6,5,4] -> 6''',
              ])
     
 DemoQuestion = Question(
-             '''print_n''',
-             '''Print the number n.''',
+             '''return_n''',
+             '''Return the number n.''',
              '''Given a number n, return n.''',
             [[1,1],
              [2,2],
