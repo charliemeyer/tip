@@ -10,6 +10,7 @@ define([
         constructor: function (args) {
             var self = this;
             this.textBox = args.textBox;
+            this.timer = args.timer;
             numMessages = 0;
             maxMessages = 10;
             setTimeout(function message() {
@@ -18,6 +19,9 @@ define([
                     setTimeout(message, 5000);
                 }
             }, 5000);
+            this.timer.runTimer(function () {
+                self.addMessage("Time is up!  We'll get back to you in a few days.")
+            });
         },
 
         addMessage: function (message) {
