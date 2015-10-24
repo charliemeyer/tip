@@ -47,6 +47,8 @@ define([
                 fadeOutAnimation.play();
             }, timeOut);
             this._shiftUp(messageHeight, messageBox);
+
+            meSpeak.speak(messageText);
         },
 
         _shiftUp: function (amt, ignore) {
