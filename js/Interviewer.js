@@ -39,11 +39,13 @@ define([
 
             var self = this;
             var silentMoments = 0;
+            this.waitForUser(5);
             setInterval(function() {
                 if (media.checkVolume() && self.canBotherUser) {
-                    if (silentMoments++ > 20) {
+                    console.log("silent");
+                    if (silentMoments++ > 5) {
                         self.generateComment();
-                        self.waitForUser(15);
+                        self.waitForUser(5);
                         silentMoments = 0;
                     }
                 }
@@ -60,7 +62,7 @@ define([
          */
         beginInterview: function () {
             var self = this;
-            var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question.";
+            var intro = "Hi! My name is Bill Gates. Let's get things started with a coding question.";
             this.addMessage(intro);
 
             this.timer.runTimer(function (endedSoon) {
@@ -90,7 +92,9 @@ define([
             this.nextQuestion = 0;
             request.get("/questions.json").then(function (response) {
                 self.questions = JSON.parse(response);
-                self.getNextQuestion();
+                setTimeout(function () {
+                    self.getNextQuestion();
+                }, 3000);
             }, function (error) {
                 self.questions = [{
                     function_name: "sort(list, length)",
@@ -98,14 +102,17 @@ define([
                     desc: "Sort a list of numbers.",
                     testcases: [["[3, 2, 1]", "[1, 2, 3]"]]
                 }];
-                self.getNextQuestion();
+                setTimeout(function () {
+                    self.getNextQuestion();
+                }, 3000);
             });
         },
 
         waitForUser: function (seconds) {
             this.canBotherUser = false;
+            var self = this;
             setTimeout(function () {
-                this.canBotherUser = true;
+                self.canBotherUser = true;
             }, seconds * 1000);
         },
 
@@ -127,8 +134,7 @@ define([
             if (this.nextQuestion < this.questions.length) {
                 this.editor.setValue('');
                 this.currentQuestion = this.questions[this.nextQuestion++];
-                var message = "Please write a function called " + this.currentQuestion.function_name + " that should do the following:";
-                this.addMessage(message);
+                var message = this.currentQuestion.desc;
                 this.addMessage(this.currentQuestion.desc);
                 dom.byId("question-prompt").innerHTML = "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question;
             } else {
@@ -154,7 +160,7 @@ define([
             var comment = false;
             while (row >= 0 && !comment) {
                 comment = this.getCommentFrom(lines[row], row + 1);
-                row--;
+                --row;
             }
             if (comment) {
                 this.addMessage(comment);
@@ -212,9 +218,11 @@ define([
                     self.addMessage(choose(["Okay, that looks fine to me.",
                         "Sure, that should work.",
                         "I think this'll work."]));
-                    self.getNextQuestionOr(function () {
-                        self.endInterview();
-                    });
+                    setTimeout(function () {
+                        self.getNextQuestionOr(function () {
+                            self.endInterview();
+                        });
+                    }, 3000)
                 }
             });
         }

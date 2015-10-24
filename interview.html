@@ -42,6 +42,7 @@
                 editor: "editor"
             });
             var chat = new ChatBox({
+                defaultTimeOut: 60 * 5000,
                 id: "chat-area"
             });
             var timer = new Timer({
@@ -59,10 +60,18 @@
             $("#syntaxhelp").change(function(){
                 editor.getSession().setUseWorker($(this).prop("checked"));
             });
+
+            function choose(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
             $("#langoptions").change(function(){
                 var language = $(this).val();
                 editor.session.setMode("ace/mode/" + language);
-                interviewer.addMessage("What's your favorite part about " + language + "?");
+                setTimeout(function () {
+                    interviewer.addMessage(choose(["What's your favorite part about " + language + "?",
+                        "Why do you want to use " + language + " for this?"
+                        ]));
+                }, 500);
             });
             interviewer.beginInterview();
         });
@@ -76,7 +85,7 @@
     </div>
     <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" id="borderContainer" style="height:100%; width=100%;">
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
-            <div id="question-prompt" style='font-size: 18px;'></div>
+            <div id="question-prompt" style='font-size: 18px;'>&nbsp;</div>
         </div>
         <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="splitter:true, region:'right'" style="width: 300px;">
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
