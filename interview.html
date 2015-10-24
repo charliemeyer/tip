@@ -36,6 +36,7 @@
                 id: "chat-area"
             });
             var timer = new Timer({
+                minutes: 15,
                 id: "timer-area"
             });
             var interviewer = new Interviewer({
@@ -48,17 +49,13 @@
             var editor = new Editor({
                 editor: "editor"
             });
-            editor.setTheme("ace/theme/clouds");
-            editor.session.setMode("ace/mode/javascript");
-            // Charlie's sick jquery code fuck this dojo bozo 
+            // Charlie's sick jquery code fuck this dojo bozo
             $("#syntaxhelp").change(function(){
                 editor.getSession().setUseWorker($(this).prop("checked"));
             });
             $("#langoptions").change(function(){
                 editor.session.setMode("ace/mode/" + $(this).val());
             })
-            document.getElementById('editor').style.fontSize='14px';
-            document.getElementById('editor').style.fontFamily='Roboto Mono';
         });
     </script>
 </head>
@@ -119,7 +116,5 @@ function fizz_buzz(items) {
     meSpeak.loadConfig("js/mespeak/mespeak_config.json");
     meSpeak.loadVoice("js/mespeak/voices/en/en-us.json");
   </script>
-<script src='js/media.js'></script>
-
 </body>
 </html>

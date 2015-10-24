@@ -1,6 +1,7 @@
 define([
         "dojo/_base/declare",
-        "js/lodash"
+        "js/lodash",
+        "dojo/domReady!"
     ], function (
         declare,
         _
@@ -10,15 +11,11 @@ define([
         constructor: function (args) {
             var self = this;
             this.textBox = args.textBox;
+            var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question. This is my question: ";
+            var question = document.getElementById('question-prompt').innerHTML;
+            // this.addMessage(intro + question); // TODO ADD THIS BACK IN. (i removed it b/c annoying)
+
             this.timer = args.timer;
-            numMessages = 0;
-            maxMessages = 10;
-            setTimeout(function message() {
-                self.addMessage("Test message " + ++numMessages);
-                if (numMessages < maxMessages) {
-                    setTimeout(message, 5000);
-                }
-            }, 5000);
             this.timer.runTimer(function () {
                 self.addMessage("Time is up!  We'll get back to you in a few days.")
             });
