@@ -14,7 +14,8 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
             data-dojo-config="async: true, parseOnLoad:true" ></script>
-  <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
     <script type="text/javascript">
         require(["dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"]);
         require(["dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dojo/domReady!"],
@@ -47,6 +48,13 @@
             var editor = new Editor({
                 editor: "editor"
             });
+            // Charlie's sick jquery code fuck this dojo bozo
+            $("#syntaxhelp").change(function(){
+                editor.getSession().setUseWorker($(this).prop("checked"));
+            });
+            $("#langoptions").change(function(){
+                editor.session.setMode("ace/mode/" + $(this).val());
+            })
         });
     </script>
 </head>
@@ -83,6 +91,20 @@ function fizz_buzz(items) {
         }
     }
 }
+            </div>
+
+            <div>Language:
+                <select id='langoptions'>
+                    <option value='javascript'>Javascript</option>
+                    <option default value='python'>Python</option>
+                    <option value='c++'>C++</option>
+                    <option value='c'>C</option>
+                    <option value='ruby'>Ruby</option>
+                    <option value='java'>Java</option>
+                </select>
+                | Show syntax mistakes? <input id='syntaxhelp' type='checkbox'>
+
+
             </div>
         </div>
 </div>
