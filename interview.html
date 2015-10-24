@@ -54,7 +54,11 @@
             });
             $("#langoptions").change(function(){
                 editor.session.setMode("ace/mode/" + $(this).val());
-            })
+            });
+
+            $("#submitcode").click(function(){
+                editor.runAndTest();
+            });
         });
     </script>
 </head>
@@ -79,7 +83,7 @@
                 <div id="chat-area"></div>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom'">
-                <button id="user-input-button">Submit Code</button>
+                <button id="submitcode">Submit Code</button>
             </div>
         </div>
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
