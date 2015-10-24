@@ -13,7 +13,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
             data-dojo-config="async: true, parseOnLoad:true" ></script>
     <script type="text/javascript">
-        require(["js/ChatBox", "dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"], function (ChatBox) {
+        require(["dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"]);
+        require(["dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dojo/domReady!"],
+            function (fx, domStyle, dom) {
+                setTimeout(function () {
+                    fx.fadeOut({
+                        node: dom.byId("loadingOverlay"),
+                        duration: 1000,
+                        onEnd: function(node){
+                            domStyle.set(node, 'display', 'none');
+                        }
+                    }).play();
+                }, 500);
+        });
+        require(["js/ChatBox"], function (ChatBox) {
             var chat = new ChatBox({
                 id: "chat-area"
             });
@@ -26,6 +39,9 @@
     </script>
 </head>
 <body class="claro">
+    <div id="loadingOverlay" class="loadingOverlay pageOverlay">
+        <div class="loadingMessage">Loading....</div>
+    </div>
     <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" id="borderContainer" style="height:100%; width=100%;">
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
             <div id="question-prompt">QUESTION</div>
