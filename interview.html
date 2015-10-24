@@ -14,36 +14,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
             data-dojo-config="async: true, parseOnLoad:true" ></script>
   <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
-    <script type="text/javascript">
-        require(["dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"]);
-        require(["dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dojo/domReady!"],
-            function (fx, domStyle, dom) {
-                setTimeout(function () {
-                    fx.fadeOut({
-                        node: dom.byId("loadingOverlay"),
-                        duration: 1000,
-                        onEnd: function(node){
-                            domStyle.set(node, 'display', 'none');
-                        }
-                    }).play();
-                }, 500);
-        });
-        require(["js/Interviewer", "js/ChatBox"],
-            function (Interviewer, ChatBox) {
-            var chat = new ChatBox({
-                id: "chat-area"
-            });
-            var interviewer = new Interviewer({
-                textBox: chat
-            });
-            meSpeak.speak(document.querySelector('#question-prompt').innerHTML);
-        });
-        require(["js/Timer"], function (Timer) {
-            var timer = new Timer({
-                id: "timer-area"
-            });
-        });
-    </script>
 </head>
 <body class="claro">
     <div class="pageOverlay">
@@ -80,6 +50,35 @@
     meSpeak.loadVoice("js/mespeak/voices/en/en-us.json");
   </script>
 <script src='js/media.js'></script>
+    <script type="text/javascript">
+        require(["dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"]);
+        require(["dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dojo/domReady!"],
+            function (fx, domStyle, dom) {
+                setTimeout(function () {
+                    fx.fadeOut({
+                        node: dom.byId("loadingOverlay"),
+                        duration: 1000,
+                        onEnd: function(node){
+                            domStyle.set(node, 'display', 'none');
+                        }
+                    }).play();
+                }, 500);
+        });
+        require(["js/Interviewer", "js/ChatBox"],
+            function (Interviewer, ChatBox) {
+            var chat = new ChatBox({
+                id: "chat-area"
+            });
+            var interviewer = new Interviewer({
+                textBox: chat
+            });
+        });
+        require(["js/Timer"], function (Timer) {
+            var timer = new Timer({
+                id: "timer-area"
+            });
+        });
+    </script>
 
 </body>
 </html>
