@@ -77,6 +77,8 @@ define([
             this.timer.stopTimer();
             this.editor.hide();
             this.endscreen.show();
+            this.canBotherUser = false;
+            clearTimeout(this.waitingID);
             document.getElementById('bottombar').style.display = 'none';
         },
 
@@ -109,7 +111,7 @@ define([
 
         waitForUser: function (seconds) {
             this.canBotherUser = false;
-            setTimeout(function () {
+            this.waitingID = setTimeout(function () {
                 this.canBotherUser = true;
             }, seconds * 1000);
         },
