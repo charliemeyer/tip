@@ -34,41 +34,41 @@ numbers divisible by 3, print "Fizz", and all numbers divisible by 5, print "Buz
 BinarySearch = Question(
              '''search(list, target)''',
              '''Search a sorted array for x as fast as possible.''',
-             '''Given an array of sorted integers, return the string "True" if x is in the array,
-and the string "False" otherwise. Example: [[1,2,6,8,10], 9] -> "False"''',
-            {"[[], 0]":"False",
-             "[[1], 1]":"True",
-             "[[1, 2, 3, 4], 3]":"True",
-             "[[1, 2, 6, 7, 8], 5]":"False",
-             "[[-3, -2], -2]":"True"
-             })
+             '''Given an array of sorted integers, return True if x is in the array,
+and the string False otherwise. Example: [[1,2,6,8,10], 9] -> False''',
+            ["[[[], 0],False]",
+             "[[1], 1],True]",
+             "[[1, 2, 3, 4], 3],True]",
+             "[[1, 2, 6, 7, 8], 5],False]",
+             "[[-3, -2], -2],True]"
+             ])
 ArraySum = Question(
              '''find_dupe(list)''',
              '''In an array with the numbers from 1 to n with one extra number, find the extra number.''',
              '''Given an unsorted array from 1 to n with one number repeating, find the extra number as
 fast as possible. Example: [7,2,6,1,3,6,5,4] -> 6''',
-            {"[1,2,2]":"2",
-             "[1,1]":"1",
-             "[5,1,2,8,3,4,1,7,6]":"1"
-             })
+            ["[[1,2,2],2]",
+             "[[1,1],1]",
+             "[[5,1,2,8,3,4,1,7,6],1]"
+             ])
     
 DemoQuestion = Question(
-             '''print_one()''',
-             '''Print the number 1.''',
-             '''Just print the number 1.''',
-            {"[1,2,2]":"2",
-             "[1,1]":"1",
-             "[5,1,2,8,3,4,1,7,6]":"1"
-             })
+             '''print_n()''',
+             '''Print the number n.''',
+             '''Just print the number n.''',
+            ["[1,1]",
+             "[2,2]",
+             "[6,6]"
+             ])
 
 DemoQuestion2 = Question(
              '''sum_arr(list)''',
              '''Sum the numbers in an array.''',
              '''Write a function that returns the sum of the array.''',
-            {"[1,2,2]":"5",
-             "[1,1]":"2",
-             "[5,1,2]":"8"
-             })
+            ["[[1,2,2],5]",
+             "[[1,1],2]",
+             "[[5,1,2],8]"
+             ])
     
 questions = [
     FizzBuzz,

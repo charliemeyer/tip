@@ -141,7 +141,6 @@ define([], function () {
     var rightchannel = [];
     var recorder = null;
     function setUpStream(stream) {
-        console.log('setting up stream');
         var context = ac;
         // retrieve the current sample rate to be used for WAV packaging
         sampleRate = context.sampleRate;

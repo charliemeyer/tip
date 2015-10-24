@@ -41,7 +41,7 @@ define([
         beginInterview: function () {
             var self = this;
             var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question.";
-            this.addMessage(intro); // TODO ADD THIS BACK IN. (i removed it b/c annoying)
+            this.addMessage(intro);
 
             this.timer.runTimer(function () {
                 self.addMessage("Time is up!  We'll get back to you in a few days.");
@@ -52,6 +52,8 @@ define([
         endInterview: function () {
             this.editor.hide();
             this.endscreen.show();
+            this.endscreen.style.backgroundColor = '#dddddd';
+            document.getElementById('bottombar').style.display = 'none';
             //this.editor.playback();
             // Hide editor div, fill it with a results div
         },
