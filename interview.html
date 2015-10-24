@@ -27,16 +27,14 @@
                     }).play();
                 }, 500);
         });
-        require(["js/ChatBox"], function (ChatBox) {
+        require(["js/Interviewer", "js/ChatBox"],
+            function (Interviewer, ChatBox) {
             var chat = new ChatBox({
                 id: "chat-area"
             });
-            chat.addMessage("This is test message 1", 5 * 1000);
-            chat.addMessage("This is test message 2", 5 * 1000);
-            chat.addMessage("This is yet another test message 2", 5 * 1000);
-            chat.addMessage("This is test message 3", 5 * 1000);
-            chat.addMessage("This is test message 4", 5 * 1000);
-            chat.addMessage("This is test message 5", 5 * 1000);
+            var interviewer = new Interviewer({
+                textBox: chat
+            });
         });
         require(["js/Timer"], function (Timer) {
             var timer = new Timer({

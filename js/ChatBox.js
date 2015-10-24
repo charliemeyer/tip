@@ -36,15 +36,14 @@ define([
                 "class": "chat-message"
             }, this.domNode);
             var messageHeight = domGeom.getMarginBox(messageBox).h;
-            console.log(messageHeight);
             setTimeout(function () {
                 var fadeOutAnimation = fx.fadeOut({
                         node: messageBox,
-                        duration: 1000
+                        duration: 1000,
+                        onEnd: function () {
+                            domConstruct.destroy(messageBox);
+                        }
                     });
-                on(fadeOutAnimation, "End", function () {
-                    //domConstruct.destroy(messageBox);
-                });
                 fadeOutAnimation.play();
             }, timeOut);
             this._shiftUp(messageHeight, messageBox);
@@ -58,8 +57,6 @@ define([
                 if (!_.includes(ignore, child)) {
                     var bottom = parseInt(domStyle.get(child, "bottom"));
                     domStyle.set(child, "bottom", bottom + amt + "px");
-                    console.log(child);
-                    console.log(bottom, amt)
                 }
             });
         }
