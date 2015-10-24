@@ -55,7 +55,7 @@ define([
         loadQuestions: function () {
             var self = this;
             this.nextQuestion = 0;
-            request.post("http://simterview.appspot.com/questions.json").then(function (response) {
+            request.post("/questions.json").then(function (response) {
                 self.questions = response;
                 self.getNextQuestion();
             }, function (error) {
