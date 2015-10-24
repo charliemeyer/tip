@@ -15,12 +15,12 @@ define([
             lang.mixin(this, ace.edit("editor"));
             this.setTheme("ace/theme/clouds");
             this.session.setMode("ace/mode/javascript");
-            var initTime = (new Date()).getTime();
+            this.initTime = (new Date()).getTime();
 
             this.changelog = [[0, this.getValue()]];
             var self = this;
             this.on('change', function(e) {
-                var timediff = ((new Date()).getTime() - initTime);
+                var timediff = ((new Date()).getTime() - self.initTime);
                 var code_value = self.getValue();
                 self.changelog.push([timediff, code_value]);
             });
@@ -38,7 +38,7 @@ define([
                     $('#results').html(code);
                 }, timediff);
             });
-
+           play_wav();
         },
 
         runAndTest: function () {

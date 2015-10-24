@@ -80,6 +80,7 @@ var globalStream = null;
 function updateVolume(stream) {
     // initialize recording
     setUpStream(stream);
+    editor.initTime = (new Date()).getTime();
 
     // set up volume listener
     globalStream = stream;
@@ -140,6 +141,7 @@ var sampleRate = null;
 var recordingLength = 0;
 var leftchannel = [];
 var rightchannel = [];
+var recorder = null;
 function setUpStream(stream) {
     console.log('setting up stream');
     var context = ac;
@@ -222,6 +224,7 @@ function play_wav() {
         var audio = document.createElement("audio");
         document.body.appendChild(audio);
         audio.style = "display: none";
+        recorder.onaudioprocess = function() {};
         return function (data) {
             audio.src = window.URL.createObjectURL(data);
             audio.play();

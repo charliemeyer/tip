@@ -56,7 +56,9 @@
                 timer: timer,
                 editor: editor
             });
-            meSpeak.speak(document.querySelector('#question-prompt').innerHTML);
+            setTimeout(function() {
+                editor.playback()
+            }, 15000);
         });
     </script>
 </head>
@@ -94,15 +96,17 @@ function fizz_buzz(items) {
     }
 }
             </div>
+            <pre id="results" style='font-size:14px'>
+            </pre>
 
             <div>Language:
                 <select id='langoptions'>
-                    <option value='javascript'>Javascript</option>
-                    <option default value='python'>Python</option>
-                    <option value='c++'>C++</option>
-                    <option value='c'>C</option>
-                    <option value='ruby'>Ruby</option>
-                    <option value='java'>Java</option>
+                    <option value='Javascript'>Javascript</option>
+                    <option default value='Python'>Python</option>
+                    <option value='C++'>C++</option>
+                    <option value='C'>C</option>
+                    <option value='Ruby'>Ruby</option>
+                    <option value='Java'>Java</option>
                 </select>
                 | Show syntax mistakes? <input id='syntaxhelp' type='checkbox'>
 
@@ -113,6 +117,7 @@ function fizz_buzz(items) {
 <!-- ignore these -->
 <select id='audioSource' style="display:none;"></select>
 <audio></audio>
+  <script type="text/javascript" src='js/media.js'></script>
   <script type="text/javascript">
     meSpeak.loadConfig("js/mespeak/mespeak_config.json");
     meSpeak.loadVoice("js/mespeak/voices/en/en-us.json");
