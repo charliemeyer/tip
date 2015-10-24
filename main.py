@@ -53,21 +53,21 @@ fast as possible. Example: [7,2,6,1,3,6,5,4] -> 6''',
              ])
     
 DemoQuestion = Question(
-             '''print_n()''',
+             '''print_n(n)''',
              '''Print the number n.''',
              '''Just print the number n.''',
-            ["[1,1]",
-             "[2,2]",
-             "[6,6]"
+            [[1,1],
+             [2,2],
+             [6,6]
              ])
 
 DemoQuestion2 = Question(
              '''sum_arr(list)''',
              '''Sum the numbers in an array.''',
              '''Write a function that returns the sum of the array.''',
-            ["[[1,2,2],5]",
-             "[[1,1],2]",
-             "[[5,1,2],8]"
+            [[[1,2,2],5],
+             [[1,1],2],
+             [[5,1,2],8]
              ])
     
 questions = [
@@ -105,7 +105,7 @@ class Questions(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'   
 
         def questions_to_json():
-            random.shuffle(questions)
+            #random.shuffle(questions)
             output_list = []
             for q in questions:
                 obj = {}

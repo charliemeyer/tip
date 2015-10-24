@@ -16,7 +16,7 @@ define([
     ) {
 
     function choose(array) {
-        return array[Math.floor(Math.random() * myArray.length)];
+        return array[Math.floor(Math.random() * array.length)];
     }
 
     /**
@@ -101,7 +101,7 @@ define([
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
                 this.currentQuestion = this.questions[this.nextQuestion++];
-                var message = "Please write a function called " + question.function_name + " that should do the following:";
+                var message = "Please write a function called " + this.currentQuestion.function_name + " that should do the following:";
                 this.addMessage(message);
                 this.addMessage(this.currentQuestion.desc);
                 dom.byId("question-prompt").innerHTML = this.currentQuestion.question;
@@ -156,7 +156,7 @@ define([
          */
         evaluateAnswer: function () {
             function removeWhiteSpace(str) {
-                return str.replace(/ /g,'');
+                return str;//str.replace(/ /g,'');
             }
             var self = this;
                 self.generateComment();
@@ -165,7 +165,7 @@ define([
                 var failedCases = [];
                 var numSuccesses = 0;
                 _.each(data.stdout, function (output, testnum) {
-                    if (removeWhiteSpace(output) === removeWhiteSpace(self.currentQuestion[testnum][1])) {
+                    if (removeWhiteSpace(output) == removeWhiteSpace(self.currentQuestion.testcases[testnum][1])) {
                         ++numSuccesses;
                     } else {
                         failedCases.push(testnum);
