@@ -38,9 +38,16 @@ define([
             this.canBotherUser = false;
 
             var self = this;
-            setInterval(function() {if (media.checkVolume()) {
-                self.generateComment();
-            }}, 150);
+            var silentMoments = 0;
+            setInterval(function() {
+                if (media.checkVolume() && self.canBotherUser) {
+                    if (silentMoments++ > 20) {
+                        self.generateComment();
+                        self.waitForUser(15);
+                        silentMoments = 0;
+                    }
+                }
+            }, 250);
 
             on(dom.byId("user-input-button"), "click", lang.hitch(this, this.evaluateAnswer));
 
@@ -141,10 +148,10 @@ define([
          *  something that can be commented on.
          */
         generateComment: function () {
-            var row = this.editor.getCursorPosition().row;
+            var row = this.editor.getCursorPosition().row - 1;
             var lines = this.editor.getValue().split("\n");
             var comment = false;
-            while (row > 0 && !comment) {
+            while (row >= 0 && !comment) {
                 comment = this.getCommentFrom(lines[row], row + 1);
                 row--;
             }
