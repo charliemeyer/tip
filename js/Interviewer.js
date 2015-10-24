@@ -24,6 +24,8 @@ define([
             this.textBox = args.textBox;
             this.timer = args.timer;
             this.editor = args.editor;
+            this.endscreen = args.endscreen;
+            this.endscreen.registerEditor(this.editor);
             this.questions = [];
             this.nextQuestion = 0;
 
@@ -38,7 +40,7 @@ define([
          */
         beginInterview: function () {
             var self = this;
-            var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question. This is my question: ";
+            var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question.";
             this.addMessage(intro); // TODO ADD THIS BACK IN. (i removed it b/c annoying)
 
             this.timer.runTimer(function () {
@@ -48,7 +50,9 @@ define([
         },
 
         endInterview: function () {
-            this.editor.playback();
+            this.editor.hide();
+            this.endscreen.show();
+            //this.editor.playback();
             // Hide editor div, fill it with a results div
         },
 

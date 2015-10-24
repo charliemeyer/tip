@@ -33,8 +33,8 @@
                 }, 500);
         });
         // Starts the app
-        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "dojo/domReady!"],
-            function (Interviewer, ChatBox, Timer, Editor) {
+        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "js/Endscreen", "dojo/domReady!"],
+            function (Interviewer, ChatBox, Timer, Editor, Endscreen) {
             require(["js/media"], function (media) {
                 media.load();
             });
@@ -45,13 +45,15 @@
                 id: "chat-area"
             });
             var timer = new Timer({
-                minutes: 15,
+                minutes: .1,
                 id: "timer-area"
             });
+            var endscreen = new Endscreen();
             var interviewer = new Interviewer({
                 textBox: chat,
                 timer: timer,
-                editor: editor
+                editor: editor,
+                endscreen: endscreen
             });
             // Charlie's sick jquery code fuck this dojo bozo
             $("#syntaxhelp").change(function(){
@@ -88,6 +90,7 @@
             </div>
         </div>
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+            <div id="endscreen"><button id="replay-button">Replay</button></div>
             <div id="editor" style='width: 100%; height: 500px;'>
 // Write fizz_buzz
 function fizz_buzz(items) {

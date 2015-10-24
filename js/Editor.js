@@ -1,12 +1,15 @@
 define([
         "dojo/_base/declare",
         "dojo/_base/lang",
+        "dojo/dom-style",
         "dojo/on",
         "js/media",
         "js/lodash"
     ], function (
         declare,
         lang,
+        domStyle,
+        on,
         media,
         _
     ) {
@@ -72,6 +75,14 @@ define([
             $.post(base_url, params, function(data){
                 callback(data);
             }).fail(/*alert("failed to check code")*/);
+        },
+
+        hide: function () {
+            domStyle.set(this.container, "display", "none");
+        },
+
+        show: function () {
+            domStyle.set(this.container, "display", "block");
         }
     });
 
