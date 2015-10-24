@@ -73,9 +73,9 @@ define([
                 source: source,
                 lang: lang,
                 api_key: api_key,
-                testcases: _.map(question.testcases, function (elem) {
-                    return elem[0];
-                })
+                testcases: JSON.stringify(_.map(question.testcases, function (elem) {
+                    return elem[0]+"";
+                }))
             };
             $.post(base_url, params, function(data){
                 callback(data);

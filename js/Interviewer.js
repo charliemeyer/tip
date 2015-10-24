@@ -5,6 +5,7 @@ define([
         "dojo/dom",
         "dojo/on",
         "js/lodash",
+        "js/media",
         "dojo/domReady!"
     ], function (
         declare,
@@ -12,7 +13,8 @@ define([
         request,
         dom,
         on,
-        _
+        _,
+        media
     ) {
 
     function choose(array) {
@@ -34,6 +36,11 @@ define([
             this.nextQuestion = 0;
             this.currentQuestion = null;
             this.canBotherUser = false;
+
+            var self = this;
+            setInterval(function() {if (media.checkVolume()) {
+                self.generateComment();
+            }}, 150);
 
             on(dom.byId("user-input-button"), "click", lang.hitch(this, this.evaluateAnswer));
 
