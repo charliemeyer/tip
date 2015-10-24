@@ -13,7 +13,7 @@ define([
         constructor: function (args) {
             var editorId = args.editor || "editor";
             lang.mixin(this, ace.edit("editor"));
-            this.setTheme("ace/theme/clouds");
+            this.setTheme("ace/theme/textmate");
             this.session.setMode("ace/mode/javascript");
             var initTime = (new Date()).getTime();
 
@@ -51,7 +51,8 @@ define([
             params = {
                 source: source,
                 lang: lang,
-                api_key: api_key
+                api_key: api_key,
+                testcases: testcases
             };
             $.post(base_url, params, function(data){
                 alert(data);
