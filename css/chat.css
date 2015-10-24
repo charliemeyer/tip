@@ -3,7 +3,7 @@
     height: 100%;
 }
 
-#chat-area > div {
+.chat-message {
     position: absolute;
     bottom: 0;
 }
