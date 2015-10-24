@@ -34,7 +34,7 @@ define([
                 var code_value = self.getValue();
                 self.changelog.push([timediff, code_value]);
             });
-            this.$blockScrolling = Infinity;
+            // this.$blockScrolling = Infinity;
         },
 
         /**
