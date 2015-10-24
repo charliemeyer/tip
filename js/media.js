@@ -46,7 +46,7 @@ globalVolume = 0;
 
 function printVolume() {
     globalVolume = getVolume();
-    console.log(globalVolume);
+    //console.log(globalVolume);
 }
 
 var audio = document.querySelector('audio');

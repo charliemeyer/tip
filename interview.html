@@ -13,6 +13,7 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
             data-dojo-config="async: true, parseOnLoad:true" ></script>
+  <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
     <script type="text/javascript">
         require(["dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"]);
         require(["dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dojo/domReady!"],
@@ -75,6 +76,11 @@
 <!-- ignore these -->
 <select id='audioSource' style="display:none;"></select>
 <audio></audio>
+  <script type="text/javascript">
+    meSpeak.loadConfig("js/mespeak/mespeak_config.json");
+    meSpeak.loadVoice("js/mespeak/voices/en/en-us.json");
+  </script>
 <script src='js/media.js'></script>
+
 </body>
 </html>
