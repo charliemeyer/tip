@@ -3,7 +3,8 @@ html, body {
     height: 100%;
     margin: 0;
     overflow: hidden;
-    font-family: "Roboto Mono", monospace
+    font-family: "Roboto Mono", monospace;
+    /*background-color: #F5F5F5;*/
 }
 
 #layoutContainer {
@@ -11,16 +12,36 @@ html, body {
     height: 100%;
 }
 
+@keyframes buttonhover{
+  from {background-color: #00c853; box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);}
+  to {background-color: #4caf50; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);}
+}
+
 button, .button {
 	border: 0px;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 	color: #FFFFFF;
-	background-color: #303030;
+	background-color: #00c853;
 	padding: 5px;
     text-decoration: none;
+}
+
+button:hover, .button:hover {
+    background-color: #4caf50;
+    animation: buttonhover;
+    -webkit-transition-duration: 250ms;
+    transition-duration: 250ms;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
 .bigbutton {
     font-size: 25px;
     font-weight: bold;
+    padding: 12px 20px;
 }
+
+div {
+    border: none !important;
+}
+

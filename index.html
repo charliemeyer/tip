@@ -5,6 +5,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dijit/themes/claro/claro.css">
     <title>Simterview</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
             data-dojo-config="async: true, parseOnLoad:true" ></script>
     <script type="text/javascript">
@@ -14,10 +15,21 @@
     <div id='content'>
     	<h1>Simterview</h1>
     	<h3 style='margin-bottom: 100px;'>Simulated interviews so that you can get real jobs.</h3>
+        Duration: <select id='duration'>
+            <option value='15'>15 minutes</option>
+            <option value='30'>30 minutes</option>
+            <option value='45'>45 minutes</option>
+            <option value='60'>1 Hour</option>
+        </select><br><br><br>
+    	<span class='button bigbutton' id='start'>Start</span>
 
-    	<a class='button bigbutton' href="/interview">Start</a>
+        <script type="text/javascript">
+        $("#start").click(function(){
+            window.location = "/interview?duration=" + $("#duration").val();
+        });
+        </script>
+
     </div>
-</div>
   
 </body>
 </html>
