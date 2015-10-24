@@ -56,9 +56,6 @@
             $("#langoptions").change(function(){
                 editor.session.setMode("ace/mode/" + $(this).val());
             })
-            setTimeout(function() {
-                editor.playback();
-            }, 15000);
         });
     </script>
 </head>
