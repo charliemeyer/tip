@@ -28,10 +28,10 @@ define([
             var self = this;
             setTimeout(function decrement() {
                 self.seconds -= 1;
-                if (!this.paused && self.seconds >= 0) {
+                if (!self.paused && self.seconds >= 0) {
                     setTimeout(decrement, 1000);
                 } else {
-                    callback(this.paused);
+                    callback(self.paused);
                     return;
                 }
                 self.renderTime();
