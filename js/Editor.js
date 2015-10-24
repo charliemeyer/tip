@@ -2,10 +2,12 @@ define([
         "dojo/_base/declare",
         "dojo/_base/lang",
         "dojo/on",
+        "js/media",
         "js/lodash"
     ], function (
         declare,
         lang,
+        media,
         _
     ) {
 
@@ -47,7 +49,7 @@ define([
                     $('#results').html(code);
                 }, timediff);
             });
-           play_wav();
+           media.play_wav();
         },
 
         /**

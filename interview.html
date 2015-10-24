@@ -35,6 +35,9 @@
         // Starts the app
         require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "dojo/domReady!"],
             function (Interviewer, ChatBox, Timer, Editor) {
+            require(["js/media"], function (media) {
+                media.load();
+            });
             editor = new Editor({
                 editor: "editor"
             });
@@ -116,7 +119,6 @@ function fizz_buzz(items) {
 <!-- ignore these -->
 <select id='audioSource' style="display:none;"></select>
 <audio></audio>
-  <script type="text/javascript" src='js/media.js'></script>
   <script type="text/javascript">
     meSpeak.loadConfig("js/mespeak/mespeak_config.json");
     meSpeak.loadVoice("js/mespeak/voices/en/en-us.json");

@@ -43,7 +43,12 @@ define([
 
             this.timer.runTimer(function () {
                 self.addMessage("Time is up!  We'll get back to you in a few days.");
+                self.endInterview();
             });
+        },
+
+        endInterview: function () {
+            // Hide editor div, fill it with a results div
         },
 
         /**
@@ -55,7 +60,7 @@ define([
         loadQuestions: function () {
             var self = this;
             this.nextQuestion = 0;
-            request.post("/questions.json").then(function (response) {
+            request.get("/questions.json").then(function (response) {
                 self.questions = response;
                 self.getNextQuestion();
             }, function (error) {
@@ -144,7 +149,7 @@ define([
                     self.addMessage("I think you may have missed something.");
                 } else {
                     self.getNextQuestionOr(function () {
-                        self.addMessage("Good job!  You're all done!")
+                        self.endInterview();
                     });
                 }
             });
