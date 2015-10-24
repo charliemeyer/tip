@@ -169,6 +169,7 @@ define([
 
         getCommentFrom: function (line, number) {
             if (_.contains(this.explainedLines, number)) return;
+            var variables = /(\w*)\s*=/.exec(line);
             if (_.contains(line, "if")) {
                 this.explainedLines.push(number);
                 return choose(["What is that if statement on line " + number + " testing for?",
@@ -177,6 +178,10 @@ define([
                 this.explainedLines.push(number);
                 return choose(["Can you explain the invariant for the loop on line " + number + "?",
                     "What will be the time complexity of the loop on line " + number + "?"]);
+            } else if (variables.length > 1) {
+                return choose(["What are you using " + variables[1] + " for?",
+                    "What does " + variables[1] + " hold?",
+                    "What value will " + variables[1] + " have after line " + number + "?"]);
             } else {
                 return false;
             }
