@@ -160,7 +160,7 @@ define([
             }
             var self = this;
                 self.generateComment();
-            this.editor.runAndTest(function (data) {
+            this.editor.runAndTest(this.currentQuestion, function (data) {
                 data = data.result;
                 var failedCases = [];
                 var numSuccesses = 0;
