@@ -6,4 +6,5 @@
 .chat-message {
     position: absolute;
     bottom: 0;
+    background-color: lightblue;
 }
