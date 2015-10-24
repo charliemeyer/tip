@@ -60,7 +60,9 @@
                 editor.getSession().setUseWorker($(this).prop("checked"));
             });
             $("#langoptions").change(function(){
-                editor.session.setMode("ace/mode/" + $(this).val());
+                var language = $(this).val();
+                editor.session.setMode("ace/mode/" + language);
+                interviewer.addMessage("What's your favorite part about " + language + "?");
             });
             interviewer.beginInterview();
         });
