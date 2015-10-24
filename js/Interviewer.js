@@ -15,6 +15,10 @@ define([
         _
     ) {
 
+    function choose(array) {
+        return array[Math.floor(Math.random() * myArray.length)];
+    }
+
     /**
      *  The Interviewer class manages and coordinates the other objects on the
      *  page.  It is the primary thing that interacts with the user.
@@ -73,7 +77,7 @@ define([
                     function_name: "sort(list, length)",
                     question: "Sort a list",
                     desc: "Sort a list of numbers.",
-                    testcases: ["1, 2, 3"]
+                    testcases: [["[3, 2, 1]", "[1, 2, 3]"]]
                 }];
                 self.getNextQuestion();
             });
@@ -103,6 +107,7 @@ define([
             } else {
                 callback.call(this);
             }
+            this.explainedLines = [];
         },
 
         /**
@@ -131,10 +136,15 @@ define([
         },
 
         getCommentFrom: function (line, number) {
+            if (_.contains(this.explainedLines, number)) return;
             if (_.contains(line, "if")) {
-                return "What is that if statement on line " + number + " testing for?";
+                this.explainedLines.push(number);
+                return choose(["What is that if statement on line " + number + " testing for?",
+                    "Can you explain the check you make on line " + number + "?"]);
             } else if (_.contains(line, "while") || _.contains(line, "for")) {
-                return "Can you explain the loop invarient for the loop on line " + number + "?";
+                this.explainedLines.push(number);
+                return choose(["Can you explain the invariant for the loop on line " + number + "?",
+                    "What will be the time complexity of the loop on line " + number + "?"]);
             } else {
                 return false;
             }
@@ -145,17 +155,41 @@ define([
          *  next question if the answer was correct.
          */
         evaluateAnswer: function () {
+            function removeWhiteSpace(str) {
+                return str.replace(/ /g,'');
+            }
             var self = this;
                 self.generateComment();
             this.editor.runAndTest(function (data) {
-
+                data = data.result;
+                var failedCases = [];
+                var numSuccesses = 0;
+                _.each(data.stdout, function (output, testnum) {
+                    if (removeWhiteSpace(output) === removeWhiteSpace(self.questions[testnum][1])) {
+                        ++numSuccesses;
+                    } else {
+                        failedCases.push(testnum);
+                    }
+                });
                 // TODO: assign failedCases
                 console.log(data);
                 // check test cases
 
                 if (failedCases.length > 0) {
-                    self.addMessage("I think you may have missed something.");
+                    if (numSuccesses === 0) {
+                        self.addMessage(choose(["Okay.  Why don't you try walking through an example?",
+                            "Hm, I'm not sure this does quite what you're thinking.  Try stepping through it.",
+                            "I don't think this is quite going to work."]));
+                    } else if (numSuccesses < failedCases.length) {
+                        self.addMessage(choose(["Are you sure this works correctly in all cases?",
+                            "How about making a test case and walking through it for me?"]));
+                    } else {
+                        self.addMessage("I think you may have missed something.  Try walking through the code on this example: " + choose(failedCases));
+                    }
                 } else {
+                    self.addMessage(choose(["Okay, that looks fine to me.",
+                        "Sure, that should work.",
+                        "I think this'll work."]));
                     self.getNextQuestionOr(function () {
                         self.endInterview();
                     });
@@ -163,6 +197,5 @@ define([
             });
         }
     });
-
     return Interviewer;
 });
