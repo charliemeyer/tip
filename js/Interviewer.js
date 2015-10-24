@@ -33,6 +33,7 @@ define([
             this.questions = [];
             this.nextQuestion = 0;
             this.currentQuestion = null;
+            this.canBotherUser = false;
 
             on(dom.byId("user-input-button"), "click", lang.hitch(this, this.evaluateAnswer));
 
@@ -87,6 +88,13 @@ define([
             });
         },
 
+        waitForUser: function (seconds) {
+            this.canBotherUser = false;
+            setTimeout(function () {
+                this.canBotherUser = true;
+            }, seconds * 1000);
+        },
+
         /**
          *  Asks the user the next question in the list.  It is an error to
          *  call this function if there are no questions left.
@@ -107,7 +115,7 @@ define([
                 var message = "Please write a function called " + this.currentQuestion.function_name + " that should do the following:";
                 this.addMessage(message);
                 this.addMessage(this.currentQuestion.desc);
-                dom.byId("question-prompt").innerHTML = this.currentQuestion.question;
+                dom.byId("question-prompt").innerHTML = "Define " + this.currentQuestion.function_name + "() " + this.currentQuestion.question;
             } else {
                 callback.call(this);
             }
