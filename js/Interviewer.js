@@ -125,11 +125,12 @@ define([
          */
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
+                this.editor.setValue('');
                 this.currentQuestion = this.questions[this.nextQuestion++];
                 var message = "Please write a function called " + this.currentQuestion.function_name + " that should do the following:";
                 this.addMessage(message);
                 this.addMessage(this.currentQuestion.desc);
-                dom.byId("question-prompt").innerHTML = "Define " + this.currentQuestion.function_name + "() " + this.currentQuestion.question;
+                dom.byId("question-prompt").innerHTML = "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question;
             } else {
                 callback.call(this);
             }
