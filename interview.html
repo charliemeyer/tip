@@ -46,8 +46,10 @@
     </script>
 </head>
 <body class="claro">
-    <div id="loadingOverlay" class="loadingOverlay pageOverlay">
-        <div class="loadingMessage">Loading....</div>
+    <div class="pageOverlay">
+        <div id="loadingOverlay">
+            <div class="loadingMessage">Loading....</div>
+        </div>
     </div>
     <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" id="borderContainer" style="height:100%; width=100%;">
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
@@ -56,7 +58,7 @@
         <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="splitter:true, region:'right'" style="width: 300px;">
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
                 <div id="time-display">
-                    Time Remaining: <span id='timer-area'></span><button id='start-timer'>Pause</button> 
+                    Time Remaining: <span id='timer-area'></span><button id='start-timer'>Pause</button>
                 </div>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">

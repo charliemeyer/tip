@@ -5,17 +5,22 @@ html, body {
     padding: 0;
 }
 
-.pageOverlay {
+#loadingOverlay {
     top: 0;
     left: 0;
     position: absolute;
     height: 100%;
     width: 100%;
     z-index: 1001;
-    display: block;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    background:  #fff;
 }
 
-#loadingOverlay {
+#loadingOverlay > div {
+    width: 100px;
+    margin: 100px auto;
     background:  #fff url('https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dijit/themes/claro/images/loadingAnimation.gif') no-repeat 10px 23px;
 }
 
