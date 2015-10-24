@@ -2,7 +2,7 @@ define([
         "dojo/_base/declare",
         "dijit/_WidgetBase",
         "dojo/_base/fx",
-        "dojo/query",
+        "dojo/dom",
         "dojo/dom-construct",
         "dojo/dom-geometry",
         "dojo/dom-style",
@@ -13,7 +13,7 @@ define([
         declare,
         _WidgetBase,
         fx,
-        query,
+        dom,
         domConstruct,
         domGeom,
         domStyle,
@@ -25,11 +25,8 @@ define([
         constructor: function (args) {
             args = args || {};
             var id = args.id || "chat-area";
-            if (id[0] !== "#") {
-                id = "#" + id;
-            }
             this.defaultTimeOut = args.defaultTimeOut || 60 * 1000;
-            this.domNode = query(id)[0];
+            this.domNode = dom.byId(id);
         },
 
         addMessage: function (messageText, timeOut) {
