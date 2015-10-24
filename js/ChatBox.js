@@ -1,11 +1,15 @@
 define([
-    "dojo/_base/declare",
-    "dijit/_WidgetBase",
-    "dojo/query"
+        "dojo/_base/declare",
+        "dijit/_WidgetBase",
+        "dojo/_base/fx",
+        "dojo/query",
+        "dojo/dom-construct"
     ], function (
         declare,
         _WidgetBase,
-        query
+        fx,
+        query,
+        domConstruct
     ) {
 
     var ChatBox = declare([_WidgetBase], {
@@ -19,12 +23,14 @@ define([
             this.domNode = query(id)[0];
         },
 
-        addMessage: function (message, timeOut) {
+        addMessage: function (messageText, timeOut) {
             timeOut = timeOut || this.defaultTimeOut;
-        },
-
-        test: function () {
-            console.log("WORKS");
+            var messageBox = domConstruct.create("div", {
+                innerHTML: messageText
+            }, this.domNode);
+            setTimeout(function () {
+                fx.fadeOut({ node: messageBox, duration: 1000 }).play();
+            }, timeOut);
         }
     });
 

@@ -14,8 +14,10 @@
             data-dojo-config="async: true, parseOnLoad:true" ></script>
     <script type="text/javascript">
         require(["js/ChatBox", "dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"], function (ChatBox) {
-            var chat = new ChatBox({id: "chat-area"});
-            chat.test();
+            var chat = new ChatBox({
+                id: "chat-area"
+            });
+            chat.addMessage("This is the first test message", 5 * 1000);
         });
     </script>
 </head>
@@ -29,13 +31,15 @@
                 <div id="time-display">TIME</div>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
-                <div id="chat-area">CHAT<br /><br />bubbles appear, last ~1 min</div>
+                <div id="chat-area"></div>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom'">
                 <div id="user-input-button">"I think I'm done"</div>
             </div>
         </div>
-        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">Code<br /><br />infinitely scroll</div>
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
+            <div id="code-box">Code<br /><br />infinitely scroll</div>
+        </div>
 </div>
 </body>
 </html>
