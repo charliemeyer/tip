@@ -19,17 +19,15 @@ define([
             if (id[0] !== "#") {
                 id = "#" + id;
             }
-            this.defaultTimeOut = args.defaultTimeOut || 60 * 1000;
             this.domNode = query(id)[0];
             this.domNode.innerHTML = "";
-            this.seconds = args.minutes * 60 || 1 * 60;
-            this.paused = false;
+            this.seconds = Math.round(args.minutes * 60 || 1 * 60);
         },
         runTimer: function(callback) {
             var self = this;
             setTimeout(function decrement() {
                 self.seconds -= 1;
-                if (!self.paused && self.seconds >= 0) {
+                if (self.seconds >= 0) {
                     setTimeout(decrement, 1000);
                 } else {
                     callback();
