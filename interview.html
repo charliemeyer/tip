@@ -55,6 +55,9 @@
             $("#langoptions").change(function(){
                 editor.session.setMode("ace/mode/" + $(this).val());
             })
+            setTimeout(function() {
+                editor.playback();
+            }, 15000);
         });
     </script>
 </head>
@@ -72,7 +75,7 @@
         <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="splitter:true, region:'right'" style="width: 300px;">
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
                 <div id="time-display">
-                    Time Remaining: <span id='timer-area'></span><button id='start-timer'>Pause</button>
+                    Time Remaining: <span id='timer-area'></span>
                 </div>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
@@ -93,6 +96,8 @@ function fizz_buzz(items) {
     }
 }
             </div>
+            <pre id="results" style="font-size: 14px;">
+            </pre>
 
             <div>Language:
                 <select id='langoptions'>
@@ -116,5 +121,6 @@ function fizz_buzz(items) {
     meSpeak.loadConfig("js/mespeak/mespeak_config.json");
     meSpeak.loadVoice("js/mespeak/voices/en/en-us.json");
   </script>
+    <script type="text/javascript" src="js/media.js"></script>
 </body>
 </html>

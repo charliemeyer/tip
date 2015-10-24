@@ -1,0 +1,10 @@
+#content {
+	width: 50%;
+	max-width: 600px;
+	margin: 100px auto;
+	text-align: center;
+}
+
+#title {
+	font-size: 40px;
+}

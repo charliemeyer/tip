@@ -14,6 +14,12 @@ class Question(object):
         self.question_text = question_text
         self.test_cases = test_cases
 
+class Questions(webapp2.RequestHandler):
+    def get(self):
+        self.response.headers['Content-Type'] = 'application/json'   
+        questions = ["How fast is sorting?", "How slow is sorting?", "How slow are we at coding?"]
+        self.response.out.write(json.dumps(questions))
+
 class Interview(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('interview.html')
@@ -28,6 +34,7 @@ class MainHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
+    ('/questions.json', Questions),
     ('/interview', Interview),
     ('/', MainHandler)
 ], debug=True)
