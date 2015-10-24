@@ -17,7 +17,7 @@ class Question(object):
 class Interview(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('interview.html')
-        template_values = {'question': "how fast is sorting"}
+        template_values = {'question': "How fast is sorting?"}
         self.response.write(template.render(template_values))
 
 class MainHandler(webapp2.RequestHandler):

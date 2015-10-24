@@ -21,7 +21,7 @@ define([
             }
             this.defaultTimeOut = args.defaultTimeOut || 60 * 1000;
             this.domNode = query(id)[0];
-            this.domNode.innerHTML = "FUCK";
+            this.domNode.innerHTML = "";
             this.seconds = args.minutes * 60 || 1 * 60;
             this.paused = false;
         },

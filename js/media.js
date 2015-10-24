@@ -46,7 +46,7 @@ globalVolume = 0;
 
 function printVolume() {
     globalVolume = getVolume();
-    //console.log(globalVolume);
+    console.log(globalVolume);
 }
 
 var audio = document.querySelector('audio');
@@ -57,7 +57,6 @@ function updateVolume(stream) {
     audio.src = window.URL.createObjectURL(stream);
     audio.onloadedmetadata = function(e) {
       setInterval(printVolume, 150);
-      audio.play();
     };
 }
 
@@ -76,8 +75,6 @@ function start() {
   };
   navigator.mediaDevices.getUserMedia(constraints, successCallback,
               errorCallback).then(updateVolume);
-  //navigator.getUserMedia(constraints, successCallback,
-  //            errorCallback);
 }
 
 audioSelect.onchange = start;
