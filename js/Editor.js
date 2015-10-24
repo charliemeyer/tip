@@ -43,6 +43,8 @@ define([
 
         runAndTest: function () {
             var code = this.getValue();
+
+            return [];
         }
     });
 

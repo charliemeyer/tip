@@ -53,10 +53,18 @@ define([
         },
 
         getNextQuestion: function () {
+            this.getNextQuestionOr(function () {
+                console.log("ERROR IN Interviewer.getNextQuestion()");
+            });
+        },
+
+        getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
                 var question = this.questions[this.nextQuestion++];
                 this.addMessage(question);
                 dom.byId("question-prompt").innerHTML = question;
+            } else {
+                callback.call(this);
             }
         },
 
@@ -67,7 +75,13 @@ define([
         evaluateAnswer: function () {
             var failedCases = this.editor.runAndTest();
             this.addMessage("YOUR ANSWER SUCKS");
-            this.getNextQuestion();
+            if (failedCases.length > 0) {
+                this.addMessage("I think you may have missed something.");
+            } else {
+                this.getNextQuestionOr(function () {
+                    this.addMessage("Good job!  You're all done!")
+                });
+            }
         }
     });
 
