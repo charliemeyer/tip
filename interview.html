@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dijit/themes/claro/claro.css">
     <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-    <title>tip -- practice interviews</title>
+    <title>Interview Simulation</title>
     <script type="text/javascript">
     var dojoConfig = {
         baseUrl: "./",
@@ -45,7 +45,7 @@
                 id: "chat-area"
             });
             var timer = new Timer({
-                minutes: 15,
+                minutes: {{duration}},
                 id: "timer-area"
             });
             var interviewer = new Interviewer({
@@ -72,7 +72,7 @@
     </div>
     <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" id="borderContainer" style="height:100%; width=100%;">
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
-            <div id="question-prompt">{{question}}</div>
+            <div id="question-prompt"></div>
         </div>
         <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="splitter:true, region:'right'" style="width: 300px;">
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
@@ -88,27 +88,18 @@
             </div>
         </div>
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'">
-            <div id="editor" style='width: 100%; height: 500px;'>
-// Write fizz_buzz
-function fizz_buzz(items) {
-    for (i = 0; i &lt; items.length; i++) {
-        if (i % 3  == 0) {
-            alert("plz help");
-        }
-    }
-}
-            </div>
+            <div id="editor" style='width: 100%; height: 500px;'></div>
             <pre id="results" style='font-size:14px'>
             </pre>
 
             <div>Language:
                 <select id='langoptions'>
-                    <option value='Javascript'>Javascript</option>
-                    <option default value='Python'>Python</option>
-                    <option value='C++'>C++</option>
-                    <option value='C'>C</option>
-                    <option value='Ruby'>Ruby</option>
-                    <option value='Java'>Java</option>
+                    <option value='javascript'>javascript</option>
+                    <option default value='python'>python</option>
+                    <option value='c++'>c++</option>
+                    <option value='c'>c</option>
+                    <option value='ruby'>ruby</option>
+                    <option value='java'>java</option>
                 </select>
                 | Show syntax mistakes? <input id='syntaxhelp' type='checkbox'>
 
