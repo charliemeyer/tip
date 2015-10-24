@@ -21,7 +21,7 @@ class Question(object):
         self.test_cases = test_cases
 
 FizzBuzz = Question(
-             '''fizz_buzz(n)''',
+             '''fizz_buzz''',
              '''Write FizzBuzz.''',
              '''Write a program that and outputs the numbers 1 to n, but for the
 numbers divisible by 3, print "Fizz", and all numbers divisible by 5, print "Buzz".''', 
@@ -32,7 +32,7 @@ numbers divisible by 3, print "Fizz", and all numbers divisible by 5, print "Buz
              })
 
 BinarySearch = Question(
-             '''search(list, target)''',
+             '''search''',
              '''Search a sorted array for x as fast as possible.''',
              '''Given an array of sorted integers, return True if x is in the array,
 and the string False otherwise. Example: [[1,2,6,8,10], 9] -> False''',
@@ -43,7 +43,7 @@ and the string False otherwise. Example: [[1,2,6,8,10], 9] -> False''',
              "[[-3, -2], -2],True]"
              ])
 ArraySum = Question(
-             '''find_dupe(list)''',
+             '''find_dupe''',
              '''In an array with the numbers from 1 to n with one extra number, find the extra number.''',
              '''Given an unsorted array from 1 to n with one number repeating, find the extra number as
 fast as possible. Example: [7,2,6,1,3,6,5,4] -> 6''',
@@ -53,16 +53,16 @@ fast as possible. Example: [7,2,6,1,3,6,5,4] -> 6''',
              ])
     
 DemoQuestion = Question(
-             '''print_n(n)''',
+             '''print_n''',
              '''Print the number n.''',
-             '''Just print the number n.''',
+             '''Given a number n, return n.''',
             [[1,1],
              [2,2],
              [6,6]
              ])
 
 DemoQuestion2 = Question(
-             '''sum_arr(list)''',
+             '''sum_arr''',
              '''Sum the numbers in an array.''',
              '''Write a function that returns the sum of the array.''',
             [[[1,2,2],5],

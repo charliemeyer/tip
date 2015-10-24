@@ -5,6 +5,7 @@ define([
         "dojo/dom",
         "dojo/on",
         "js/lodash",
+        "js/media",
         "dojo/domReady!"
     ], function (
         declare,
@@ -12,7 +13,8 @@ define([
         request,
         dom,
         on,
-        _
+        _,
+        media
     ) {
 
     function choose(array) {
@@ -33,6 +35,11 @@ define([
             this.questions = [];
             this.nextQuestion = 0;
             this.currentQuestion = null;
+
+            var self = this;
+            setInterval(function() {if (media.checkVolume()) {
+                self.generateComment();
+            }}, 150);
 
             on(dom.byId("user-input-button"), "click", lang.hitch(this, this.evaluateAnswer));
 
@@ -159,7 +166,6 @@ define([
                 return str;//str.replace(/ /g,'');
             }
             var self = this;
-                self.generateComment();
             this.editor.runAndTest(this.currentQuestion, function (data) {
                 data = data.result;
                 var failedCases = [];

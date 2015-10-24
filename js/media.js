@@ -56,6 +56,9 @@ define([], function () {
 
     function printVolume() {
         globalVolume = getVolume();
+        if (globalVolume == null) {
+            return;
+        }
         averageVol = (globalVolume + (averageVol*totalVolumes)) / (totalVolumes+1);
         totalVolumes++;
         if (recent_min_list.length >= 120) {
@@ -73,8 +76,10 @@ define([], function () {
         var diffFromAvg = Math.abs(globalVolume - averageVol);
         if (diffFromMin < diffFromAvg) {
             // YOU ARE SILENT
+            return true;
         } else {
             // YOU ARE NOT SILENT
+            return false;
         }
     }
 
@@ -89,7 +94,7 @@ define([], function () {
         globalStream = stream;
         audio.src = window.URL.createObjectURL(stream);
         audio.onloadedmetadata = function(e) {
-          setInterval(printVolume, 150);
+          //setInterval(printVolume, 150);
         };
     }
 
@@ -113,6 +118,9 @@ define([], function () {
     var ac = new AudioContext();
     var analyzer = ac.createAnalyser();
     function getVolume() {
+        if (!globalStream) {
+            return null;
+        }
         /* create the Web Audio graph, let's assume we have sound coming out of the
          * node 'audio' */
         source = ac.createMediaStreamSource(globalStream);
@@ -277,7 +285,8 @@ define([], function () {
 
   return {
     load: execute,
-    play_wav: play_wav
+    play_wav: play_wav,
+    checkVolume: printVolume 
   }
 
 });
