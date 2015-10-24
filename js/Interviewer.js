@@ -54,12 +54,10 @@ define([
         },
 
         endInterview: function () {
+            // Hide editor div, fill it with a results div
             this.editor.hide();
             this.endscreen.show();
-            this.endscreen.style.backgroundColor = '#dddddd';
             document.getElementById('bottombar').style.display = 'none';
-            //this.editor.playback();
-            // Hide editor div, fill it with a results div
         },
 
         /**
@@ -172,10 +170,6 @@ define([
                         failedCases.push(testnum);
                     }
                 });
-                // TODO: assign failedCases
-                console.log(data);
-                console.log(data.stdout[0]);
-                // check test cases
 
                 if (failedCases.length > 0) {
                     if (numSuccesses === 0) {
