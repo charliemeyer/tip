@@ -16,12 +16,26 @@ define([
             this.session.setMode("ace/mode/javascript");
             var initTime = (new Date()).getTime();
 
-            var changelog = [];
+            this.changelog = [[0, this.getValue()]];
             var self = this;
             this.on('change', function(e) {
                 var timediff = ((new Date()).getTime() - initTime);
                 var code_value = self.getValue();
-                changelog.push([timediff, code_value]);
+                self.changelog.push([timediff, code_value]);
+            });
+            this.$blockScrolling = Infinity;
+        },
+
+        playback: function() {
+            $('#editor').hide();
+            $('#results').show();
+            var div = document.getElementById('editor');
+            this.changelog.forEach(function (e) {
+                var timediff = e[0];
+                var code = e[1];
+                setTimeout(function() {
+                    $('#results').html(code);
+                }, timediff);
             });
         },
 
