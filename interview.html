@@ -30,8 +30,20 @@
                     }).play();
                 }, 500);
         });
-        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "dojo/domReady!"],
-            function (Interviewer, ChatBox, Timer, Editor) {
+        require(["js/Editor", "dojo/domReady!"], function (Editor) {
+            editor = new Editor({
+                editor: "editor"
+            });
+            // Charlie's sick jquery code fuck this dojo bozo
+            $("#syntaxhelp").change(function(){
+                editor.getSession().setUseWorker($(this).prop("checked"));
+            });
+            $("#langoptions").change(function(){
+                editor.session.setMode("ace/mode/" + $(this).val());
+            });
+        });
+        require(["js/Interviewer", "js/ChatBox", "js/Timer"],
+            function (Interviewer, ChatBox, Timer) {
             var chat = new ChatBox({
                 id: "chat-area"
             });
@@ -39,26 +51,15 @@
                 minutes: 15,
                 id: "timer-area"
             });
-            var editor = new Editor({
-                editor: "editor"
-            });
             var interviewer = new Interviewer({
                 textBox: chat,
                 timer: timer,
                 editor: editor
             });
-            interviewer.beginInterview();
-            // Charlie's sick jquery code fuck this dojo bozo
-            $("#syntaxhelp").change(function(){
-                editor.getSession().setUseWorker($(this).prop("checked"));
-            });
-            $("#langoptions").change(function(){
-                editor.session.setMode("ace/mode/" + $(this).val());
-            })
+            meSpeak.speak(document.querySelector('#question-prompt').innerHTML);
         });
     </script>
 </head>
-
 <body class="claro">
     <div class="pageOverlay">
         <div id="loadingOverlay">
@@ -93,8 +94,6 @@ function fizz_buzz(items) {
     }
 }
             </div>
-            <pre id="results" style="font-size: 14px;">
-            </pre>
 
             <div>Language:
                 <select id='langoptions'>
@@ -118,6 +117,5 @@ function fizz_buzz(items) {
     meSpeak.loadConfig("js/mespeak/mespeak_config.json");
     meSpeak.loadVoice("js/mespeak/voices/en/en-us.json");
   </script>
-    <script type="text/javascript" src="js/media.js"></script>
 </body>
 </html>
