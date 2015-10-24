@@ -14,6 +14,8 @@ define([
             this.textBox = args.textBox;
             this.timer = args.timer;
             this.editor = args.editor;
+
+            this.getQuestions();
         },
 
         beginInterview: function () {
