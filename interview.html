@@ -59,10 +59,18 @@
             $("#syntaxhelp").change(function(){
                 editor.getSession().setUseWorker($(this).prop("checked"));
             });
+
+            function choose(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
             $("#langoptions").change(function(){
                 var language = $(this).val();
                 editor.session.setMode("ace/mode/" + language);
-                interviewer.addMessage("What's your favorite part about " + language + "?");
+                setTimeout(function () {
+                    interviewer.addMessage(choose(["What's your favorite part about " + language + "?",
+                        "Why do you want to use " + language + " for this?"
+                        ]);
+                }, 500);
             });
             interviewer.beginInterview();
         });

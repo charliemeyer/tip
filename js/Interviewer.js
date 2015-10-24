@@ -39,11 +39,12 @@ define([
 
             var self = this;
             var silentMoments = 0;
+            this.waitForUser(5);
             setInterval(function() {
                 if (media.checkVolume() && self.canBotherUser) {
-                    if (silentMoments++ > 20) {
+                    if (silentMoments++ > 5) {
                         self.generateComment();
-                        self.waitForUser(15);
+                        self.waitForUser(5);
                         silentMoments = 0;
                     }
                 }
@@ -90,7 +91,9 @@ define([
             this.nextQuestion = 0;
             request.get("/questions.json").then(function (response) {
                 self.questions = JSON.parse(response);
-                self.getNextQuestion();
+                setTimeout(function () {
+                    self.getNextQuestion();
+                }, 3000);
             }, function (error) {
                 self.questions = [{
                     function_name: "sort(list, length)",
@@ -98,7 +101,9 @@ define([
                     desc: "Sort a list of numbers.",
                     testcases: [["[3, 2, 1]", "[1, 2, 3]"]]
                 }];
-                self.getNextQuestion();
+                setTimeout(function () {
+                    self.getNextQuestion();
+                }, 3000);
             });
         },
 
@@ -126,9 +131,8 @@ define([
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
                 this.currentQuestion = this.questions[this.nextQuestion++];
-                var message = "Please write a function called " + this.currentQuestion.function_name + " that should do the following:";
+                var message = this.currentQuestion.desc;
                 this.addMessage(message);
-                this.addMessage(this.currentQuestion.desc);
                 dom.byId("question-prompt").innerHTML = "Define " + this.currentQuestion.function_name + "() " + this.currentQuestion.question;
             } else {
                 callback.call(this);
@@ -153,7 +157,7 @@ define([
             var comment = false;
             while (row >= 0 && !comment) {
                 comment = this.getCommentFrom(lines[row], row + 1);
-                row--;
+                --row;
             }
             if (comment) {
                 this.addMessage(comment);
@@ -211,9 +215,11 @@ define([
                     self.addMessage(choose(["Okay, that looks fine to me.",
                         "Sure, that should work.",
                         "I think this'll work."]));
-                    self.getNextQuestionOr(function () {
-                        self.endInterview();
-                    });
+                    setTimeout(function () {
+                        self.getNextQuestionOr(function () {
+                            self.endInterview();
+                        });
+                    }, 3000)
                 }
             });
         }
