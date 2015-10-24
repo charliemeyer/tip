@@ -16,7 +16,7 @@ define([
     ) {
 
     function choose(array) {
-        return array[Math.floor(Math.random() * myArray.length)];
+        return array[Math.floor(Math.random() * array.length)];
     }
 
     /**
@@ -46,7 +46,7 @@ define([
         beginInterview: function () {
             var self = this;
             var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question.";
-            this.addMessage(intro); // TODO ADD THIS BACK IN. (i removed it b/c annoying)
+            this.addMessage(intro);
 
             this.timer.runTimer(function () {
                 self.addMessage("Time is up!  We'll get back to you in a few days.");
@@ -55,10 +55,10 @@ define([
         },
 
         endInterview: function () {
+            // Hide editor div, fill it with a results div
             this.editor.hide();
             this.endscreen.show();
-            //this.editor.playback();
-            // Hide editor div, fill it with a results div
+            document.getElementById('bottombar').style.display = 'none';
         },
 
         /**
@@ -101,7 +101,7 @@ define([
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
                 this.currentQuestion = this.questions[this.nextQuestion++];
-                var message = "Please write a function called " + question.function_name + " that should do the following:";
+                var message = "Please write a function called " + this.currentQuestion.function_name + " that should do the following:";
                 this.addMessage(message);
                 this.addMessage(this.currentQuestion.desc);
                 dom.byId("question-prompt").innerHTML = this.currentQuestion.question;
@@ -156,7 +156,7 @@ define([
          */
         evaluateAnswer: function () {
             function removeWhiteSpace(str) {
-                return str.replace(/ /g,'');
+                return str;//str.replace(/ /g,'');
             }
             var self = this;
                 self.generateComment();
@@ -165,16 +165,12 @@ define([
                 var failedCases = [];
                 var numSuccesses = 0;
                 _.each(data.stdout, function (output, testnum) {
-                    if (removeWhiteSpace(output) === removeWhiteSpace(self.currentQuestion[testnum][1])) {
+                    if (removeWhiteSpace(output) == removeWhiteSpace(self.currentQuestion.testcases[testnum][1])) {
                         ++numSuccesses;
                     } else {
                         failedCases.push(testnum);
                     }
                 });
-                // TODO: assign failedCases
-                console.log(data);
-                console.log(data.stdout[0]);
-                // check test cases
 
                 if (failedCases.length > 0) {
                     if (numSuccesses === 0) {
