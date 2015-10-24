@@ -15,6 +15,10 @@ define([
         _
     ) {
 
+    /**
+     *  The Interviewer class manages and coordinates the other objects on the
+     *  page.  It is the primary thing that interacts with the user.
+     */
     var Interviewer = declare(null, {
         constructor: function (args) {
             this.textBox = args.textBox;
@@ -43,7 +47,7 @@ define([
         loadQuestions: function () {
             var self = this;
             this.nextQuestion = 0;
-            request("http://simterview.appspot.com/questions.json").then(function (response) {
+            request.post("http://simterview.appspot.com/questions.json").then(function (response) {
                 self.questions = response;
                 self.getNextQuestion();
             }, function (error) {
