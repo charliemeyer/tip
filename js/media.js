@@ -164,7 +164,6 @@ define([], function () {
 
         count = 0;
         recorder.onaudioprocess = function(e){
-            console.log ('recording');
             var left = e.inputBuffer.getChannelData(0);
             var right = e.inputBuffer.getChannelData(1);
             // we clone the samples
@@ -178,6 +177,51 @@ define([], function () {
         recorder.connect(context.destination);
     }
 
+
+    function mergeBuffers(channelBuffer, recordingLength){
+      var result = new Float32Array(recordingLength);
+      var offset = 0;
+      var lng = channelBuffer.length;
+      for (var i = 0; i < lng; i++){
+        var buffer = channelBuffer[i];
+        result.set(buffer, offset);
+        offset += buffer.length;
+      }
+      return result;
+    }
+
+
+    function interleave(leftChannel, rightChannel){
+      var length = leftChannel.length + rightChannel.length;
+      var result = new Float32Array(length);
+
+      var inputIndex = 0;
+
+      for (var index = 0; index < length; ){
+        result[index++] = leftChannel[inputIndex];
+        result[index++] = rightChannel[inputIndex];
+        inputIndex++;
+      }
+      return result;
+    }
+
+
+    function writeUTFBytes(view, offset, string){
+      var lng = string.length;
+      for (var i = 0; i < lng; i++){
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    }
+
+
+
+  var execute = function () {
+
+    audioSelect.onchange = start;
+
+    start();
+
+  }
     function play_wav() {
         // we flat the left and right channels down
         var leftBuffer = mergeBuffers (leftchannel, recordingLength);
@@ -231,51 +275,6 @@ define([], function () {
 
         playData(blob);
     }
-
-    function mergeBuffers(channelBuffer, recordingLength){
-      var result = new Float32Array(recordingLength);
-      var offset = 0;
-      var lng = channelBuffer.length;
-      for (var i = 0; i < lng; i++){
-        var buffer = channelBuffer[i];
-        result.set(buffer, offset);
-        offset += buffer.length;
-      }
-      return result;
-    }
-
-
-    function interleave(leftChannel, rightChannel){
-      var length = leftChannel.length + rightChannel.length;
-      var result = new Float32Array(length);
-
-      var inputIndex = 0;
-
-      for (var index = 0; index < length; ){
-        result[index++] = leftChannel[inputIndex];
-        result[index++] = rightChannel[inputIndex];
-        inputIndex++;
-      }
-      return result;
-    }
-
-
-    function writeUTFBytes(view, offset, string){
-      var lng = string.length;
-      for (var i = 0; i < lng; i++){
-        view.setUint8(offset + i, string.charCodeAt(i));
-      }
-    }
-
-
-
-  var execute = function () {
-
-    audioSelect.onchange = start;
-
-    start();
-
-  }
 
   return {
     load: execute,

@@ -124,7 +124,6 @@ define([
         generateComment: function () {
             var row = this.editor.getCursorPosition().row;
             var lines = this.editor.getValue().split("\n");
-            console.log(row);
             var comment = false;
             while (row > 0 && !comment) {
                 comment = this.getCommentFrom(lines[row], row + 1);
@@ -173,6 +172,7 @@ define([
                 });
                 // TODO: assign failedCases
                 console.log(data);
+                console.log(data.stdout[0]);
                 // check test cases
 
                 if (failedCases.length > 0) {

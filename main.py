@@ -23,8 +23,8 @@ class Question(object):
 FizzBuzz = Question(
              '''fizz_buzz(n)''',
              '''Write FizzBuzz.''',
-             '''Write a program that outputs the numbers 1 to n, but for all numbers
-divisible by 3, print "Fizz", and all numbers divisible by 5, print "Buzz".''', 
+             '''Write a program that and outputs the numbers 1 to n, but for the
+numbers divisible by 3, print "Fizz", and all numbers divisible by 5, print "Buzz".''', 
             {1:"1",
              3:"1\n2\nFizz",
              5:"1\n2\nFizz\n4\nBuzz",
@@ -45,17 +45,40 @@ and the string "False" otherwise. Example: [[1,2,6,8,10], 9] -> "False"''',
 ArraySum = Question(
              '''find_dupe(list)''',
              '''In an array with the numbers from 1 to n with one extra number, find the extra number.''',
-             '''Given an unsorted array from 1 to n and one number repeating, find the extra number as
+             '''Given an unsorted array from 1 to n with one number repeating, find the extra number as
 fast as possible. Example: [7,2,6,1,3,6,5,4] -> 6''',
             {"[1,2,2]":"2",
              "[1,1]":"1",
              "[5,1,2,8,3,4,1,7,6]":"1"
              })
     
+DemoQuestion = Question(
+             '''print_one()''',
+             '''Print the number 1.''',
+             '''Just print the number 1.''',
+            {"[1,2,2]":"2",
+             "[1,1]":"1",
+             "[5,1,2,8,3,4,1,7,6]":"1"
+             })
+
+DemoQuestion2 = Question(
+             '''sum_arr(list)''',
+             '''Sum the numbers in an array.''',
+             '''Write a function that returns the sum of the array.''',
+            {"[1,2,2]":"5",
+             "[1,1]":"2",
+             "[5,1,2]":"8"
+             })
+    
 questions = [
     FizzBuzz,
     BinarySearch,
     ArraySum
+    ]
+
+questions = [
+    DemoQuestion,
+    DemoQuestion2
     ]
 
 class Test(webapp2.RequestHandler):
@@ -97,8 +120,14 @@ class Questions(webapp2.RequestHandler):
 
 class Interview(webapp2.RequestHandler):
     def get(self):
+        duration = self.request.get('duration', None)
         template = JINJA_ENVIRONMENT.get_template('interview.html')
-        template_values = {'question': "How fast is sorting?"}
+        template_values = {'duration': 15}
+        try:
+            if duration:
+                template_values['duration'] = int(duration)
+        except:
+            pass
         self.response.write(template.render(template_values))
 
 class MainHandler(webapp2.RequestHandler):
