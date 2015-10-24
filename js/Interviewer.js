@@ -48,6 +48,7 @@ define([
         },
 
         endInterview: function () {
+            this.editor.playback();
             // Hide editor div, fill it with a results div
         },
 
