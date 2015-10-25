@@ -68,8 +68,8 @@ define([
             this.timer.runTimer(function (endedSoon) {
                 if (!endedSoon) {
                     self.addMessage("Time is up!  We'll get back to you in a few days.");
+                    self.endInterview();
                 }
-                self.endInterview();
             });
         },
 
@@ -78,7 +78,9 @@ define([
             this.timer.stopTimer();
             this.editor.hide();
             this.endscreen.show();
+            this.addMessage("And that's all it for the coding part of the interview!");
             document.getElementById('bottombar').style.display = 'none';
+            document.getElementById('question-prompt').innerHTML = 'Done with interview!';
         },
 
         /**
