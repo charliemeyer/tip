@@ -79,6 +79,8 @@ define([
             this.editor.hide();
             this.endscreen.show();
             this.addMessage("And that's all it for the coding part of the interview!");
+            this.canBotherUser = false;
+            clearTimeout(this.waitingID);
             document.getElementById('bottombar').style.display = 'none';
             document.getElementById('question-prompt').innerHTML = 'Done with interview!';
         },
@@ -112,9 +114,8 @@ define([
 
         waitForUser: function (seconds) {
             this.canBotherUser = false;
-            var self = this;
-            setTimeout(function () {
-                self.canBotherUser = true;
+            this.waitingID = setTimeout(function () {
+                this.canBotherUser = true;
             }, seconds * 1000);
         },
 
