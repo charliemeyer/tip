@@ -8,20 +8,20 @@
     <title>Interview Simulation</title>
     <script type="text/javascript">
     var dojoConfig = {
+        async: true,
         baseUrl: "./",
         tlmSiblingOfDojo: false
     };
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
-            data-dojo-config="async: true, parseOnLoad:true" ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
     <script type="text/javascript">
         // This line parses the HTML interface
-        require(["dojo/parser", "dijit/layout/ContentPane", "dijit/layout/BorderContainer"]);
-        // This takes care of fading out the loading screen.
-        require(["dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dojo/domReady!"],
-            function (fx, domStyle, dom) {
+        require(["dojo/parser", "dojo/promise/all", "dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dijit/layout/ContentPane", "dijit/layout/BorderContainer", "dojo/domReady!"],
+            function (parser, all, fx, domStyle, dom) {
+
+            all([parser.parse()]).then(function (results) {
                 setTimeout(function () {
                     fx.fadeOut({
                         node: dom.byId("loadingOverlay"),
@@ -31,6 +31,7 @@
                         }
                     }).play();
                 }, 500);
+            });
         });
         // Starts the app
         require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "js/Endscreen", "dojo/domReady!"],
