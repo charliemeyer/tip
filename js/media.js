@@ -1,7 +1,4 @@
 define([], function () {
-
-
-
     var audioSelect = document.querySelector('select#audioSource');
 
     navigator.getUserMedia = navigator.getUserMedia ||

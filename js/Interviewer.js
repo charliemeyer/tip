@@ -42,6 +42,7 @@ define([
             this.waitForUser(5);
             setInterval(function() {
                 if (media.checkVolume() && self.canBotherUser) {
+                    console.log("silent");
                     if (silentMoments++ > 5) {
                         self.generateComment();
                         self.waitForUser(5);
@@ -61,14 +62,14 @@ define([
          */
         beginInterview: function () {
             var self = this;
-            var intro = "Hi! My name is Microsoft Sam. Let's get things started with a coding question.";
+            var intro = "Hi! My name is Bill Gates. Let's get things started with a coding question.";
             this.addMessage(intro);
 
             this.timer.runTimer(function (endedSoon) {
                 if (!endedSoon) {
                     self.addMessage("Time is up!  We'll get back to you in a few days.");
+                    self.endInterview();
                 }
-                self.endInterview();
             });
         },
 
@@ -77,9 +78,11 @@ define([
             this.timer.stopTimer();
             this.editor.hide();
             this.endscreen.show();
+            this.addMessage("And that's all it for the coding part of the interview!");
             this.canBotherUser = false;
             clearTimeout(this.waitingID);
             document.getElementById('bottombar').style.display = 'none';
+            document.getElementById('question-prompt').innerHTML = 'Done with interview!';
         },
 
         /**
@@ -132,10 +135,11 @@ define([
          */
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
+                this.editor.setValue('');
                 this.currentQuestion = this.questions[this.nextQuestion++];
                 var message = this.currentQuestion.desc;
-                this.addMessage(message);
-                dom.byId("question-prompt").innerHTML = "Define " + this.currentQuestion.function_name + "() " + this.currentQuestion.question;
+                this.addMessage(this.currentQuestion.desc);
+                dom.byId("question-prompt").innerHTML = "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question;
             } else {
                 callback.call(this);
             }
