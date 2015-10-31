@@ -1,6 +1,8 @@
 define([
         "dojo/_base/declare",
         "dijit/_WidgetBase",
+        "dijit/_TemplatedMixin",
+        "dojo/text!js/templates/chatbox.html",
         "dojo/_base/fx",
         "dojo/dom",
         "dojo/dom-construct",
@@ -8,10 +10,12 @@ define([
         "dojo/dom-style",
         "dojo/on",
 
-        "js/lodash"
+        "util/lodash"
     ], function (
         declare,
         _WidgetBase,
+        _TemplatedMixin,
+        chatboxTemplateString,
         fx,
         dom,
         domConstruct,
@@ -29,22 +33,23 @@ define([
      *  @name  ChatBox
      *  @extends {dijit._WidgetBase}
      */
-    var ChatBox = declare([_WidgetBase], {
+    var ChatBox = declare([_WidgetBase, _TemplatedMixin], {
+        templateString: chatboxTemplateString,
+
         /**
          *  @constructor
          *  @function
          *  @memberof ChatBox.prototype
          *  @param  {Object} args
-         *  @param {string} [args.id="chat-area"] The ID of the domNode to use
-         *      for displaying the chat.
          *  @param {number} [args.defaultTimeOut=60000] The amount of time
          *      in milliseconds normal messages will last before fading away.
+         *  @param {number} args.messageMargin Margin, in pixels, between each
+         *      message.
          */
         constructor: function (args) {
             args = args || {};
-            var id = args.id || "chat-area";
             this.defaultTimeOut = args.defaultTimeOut || 60 * 1000;
-            this.domNode = dom.byId(id);
+            this.messageMargin = args.messageMargin || 10;
             /**
              *  A queue of messages to be given to the user.  Only one can be
              *  sent at a time.
@@ -69,8 +74,9 @@ define([
             var messageBox = domConstruct.create("div", {
                 "innerHTML": messageText,
                 "class": "chat-message"
-            }, this.domNode);
-            var messageHeight = domGeom.getMarginBox(messageBox).h + 10;
+            }, this.containerNode);
+
+            var messageHeight = domGeom.getMarginBox(messageBox).h + this.messageMargin;
             setTimeout(function () {
                 var fadeOutAnimation = fx.fadeOut({
                         node: messageBox,
@@ -126,7 +132,7 @@ define([
             if (!_.isArray(ignore)) {
                 ignore = [ignore];
             }
-            _.each(this.domNode.children, function (child) {
+            _.each(this.containerNode.children, function (child) {
                 if (!_.includes(ignore, child)) {
                     var bottom = parseInt(domStyle.get(child, "bottom"));
                     domStyle.set(child, "bottom", bottom + amt + "px");

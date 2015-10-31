@@ -4,7 +4,7 @@ define([
         "dojo/dom-style",
         "dojo/on",
         "js/media",
-        "js/lodash"
+        "util/lodash"
     ], function (
         declare,
         lang,

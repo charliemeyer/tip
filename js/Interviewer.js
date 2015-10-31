@@ -4,7 +4,7 @@ define([
         "dojo/request",
         "dojo/dom",
         "dojo/on",
-        "js/lodash",
+        "util/lodash",
         "js/media",
         "dojo/domReady!"
     ], function (
@@ -48,7 +48,7 @@ define([
             this.timer = args.timer;
             this.editor = args.editor;
             this.endscreen = args.endscreen;
-            this.endscreen.registerEditor(this.editor);
+            this.endscreen.editor = this.editor;
             /**
              *  A list of questions for the interviewer to ask.
              *  @name  questions
@@ -126,7 +126,7 @@ define([
             // Hide editor div, fill it with a results div
             this.timer.stopTimer();
             this.editor.hide();
-            this.endscreen.show();
+            this.endscreen.placeAt(dom.byId("main-area")).show();
             this.addMessage("And that's all it for the coding part of the interview!");
             this.canBotherUser = false;
             clearTimeout(this.waitingID);

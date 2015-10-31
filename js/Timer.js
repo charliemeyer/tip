@@ -1,12 +1,16 @@
 define([
         "dojo/_base/declare",
         "dijit/_WidgetBase",
+        "dijit/_TemplatedMixin",
+        "dojo/text!js/templates/timer.html",
         "dojo/_base/fx",
         "dojo/query",
         "dojo/dom-construct"
     ], function (
         declare,
         _WidgetBase,
+        _TemplatedMixin,
+        timerTemplateString,
         fx,
         query,
         domConstruct
@@ -20,26 +24,19 @@ define([
      *  @name  Timer
      *  @extends dijit._WidgetBase
      */
-    var Timer = declare([_WidgetBase], {
+    var Timer = declare([_WidgetBase, _TemplatedMixin], {
+        templateString: timerTemplateString,
+
         /**
          *  @constructor
          *  @function
          *  @memberof Timer.prototype
          *  @param {Object} args
-         *  @param {string} [args.id="timer"] The id of the HTML element to
-         *      transform into the timer.
          *  @param {number} args.minutes The number of minutes the timer should
          *      start at.
-         *  @todo Instead of turning the div into this thing's domNode, the
-         *      more typical way is to create a completely new domNode and
-         *      get passed the parent element.
          */
         constructor: function (args) {
             args = args || {};
-            var id = args.id || "timer";
-            if (id[0] !== "#") {
-                id = "#" + id;
-            }
             /**
              *  Whether the timer is paused or running.
              *  @name paused
@@ -48,20 +45,12 @@ define([
              */
             this.paused = false;
             /**
-             *  The node controlled by the timer.
-             *  @name  domNode
-             *  @type {domNode}
-             *  @memberof Timer.prototype
-             */
-            this.domNode = query(id)[0];
-            this.domNode.innerHTML = "";
-            /**
              *  The number of seconds left on the timer.
              *  @name  seconds
              *  @type {number}
              *  @memberof Timer.prototype
              */
-            this.seconds = Math.round(args.minutes * 60 || 1 * 60);
+            this.seconds = Math.round((args.minutes || 1) * 60);
         },
 
         /**
@@ -99,14 +88,40 @@ define([
          *  @memberof Timer.prototype
          */
         renderTime: function() {
-            minutes = Math.floor(this.seconds / 60);
-            seconds = this.seconds % 60;
-            if (seconds < 10) {
-                secondsstr = "0" + seconds.toString();
-            } else {
-                secondsstr = seconds.toString();
+            this.timeArea.innerHTML = this._formatTime(this.seconds);
+        },
+
+        /**
+         *  Produces a string from the given number of seconds in the format
+         *  D:HH:MM:SS.  Leading fields are omitted unless they are nonzero.
+         *  The minutes field is always supplied, even if zero.
+         *  All fields except the first are made into two-digit fields by
+         *  adding a leading zero, if needed.
+         *  @private
+         *  @memberOf Timer.prototype
+         *  @param  {number} seconds
+         *  @return {string}
+         */
+        _formatTime: function (seconds) {
+            var str = "";
+            function stringify(num) {
+                return ((str != "" && num < 10) ? "0" : "") + num.toString();
             }
-            this.domNode.innerHTML = minutes.toString() + ":" + secondsstr;
+            var minutes = Math.floor(seconds / 60);
+            var hours = Math.floor(minutes / 60);
+            var days = Math.floor(hours / 24);
+            seconds %= 60;
+            minutes %= 60;
+            hours %= 24;
+
+            if (days > 0) {
+                str += stringify(days) + ":";
+            }
+            if (hours > 0) {
+                str += stringify(hours) + ":";
+            }
+            str += stringify(minutes) + ":";
+            return str + stringify(seconds);
         }
     });
 

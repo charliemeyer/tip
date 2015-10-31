@@ -3,12 +3,14 @@
         "allowUnknownTags": true
     },
     "source": {
-    	"include": "../README.md",
+    	"include": ["../README.md", "./"],
+	"exclude": ["./node_modules/"],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
     "opts": {
-    	"destination": "./doc/"
+    	"destination": "./doc/",
+	"recurse":  true
     },
     "plugins": [],
     "templates": {

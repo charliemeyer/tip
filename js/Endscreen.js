@@ -1,13 +1,21 @@
 define([
         "dojo/_base/declare",
         "dojo/_base/lang",
+        "dijit/_WidgetBase",
+        "dijit/_TemplatedMixin",
+        "dijit/_OnDijitClickMixin",
+        "dojo/text!js/templates/endscreen.html",
         "dojo/dom",
         "dojo/dom-style",
         "dojo/on",
-        "js/lodash"
+        "util/lodash"
     ], function (
         declare,
         lang,
+        _WidgetBase,
+        _TemplatedMixin,
+        _ClickMixin,
+        endscreenTemplateString,
         dom,
         domStyle,
         on,
@@ -19,37 +27,29 @@ define([
      *  provides an opportunity to replay it.
      *  @class
      *  @name  Endscreen
+     *  @extends {dijit._WidgetBase}
      */
-    var Endscreen = declare(null, {
-        /**
-         *  @constructor
-         *  @function
-         *  @memberof Endscreen.prototype
-         *  @param  {Object} args
-         *  @param {string} [args.id="endscreen"] The id of the domNode to use
-         *      for the endscreen.
-         *  @todo It should instead take the parent node and create its own
-         *      domNode within.
-         */
-        constructor: function (args) {
-            args = args || {};
-            this.domNode = dom.byId(args.id || "endscreen");
-            this.hide();
-        },
+    var Endscreen = declare([_WidgetBase, _TemplatedMixin, _ClickMixin], {
+        templateString: endscreenTemplateString,
 
         /**
-         *  Registers the provided editor so that its history will be played
-         *  when the replay button is pressed.
-         *  @memberof Endscreen.prototype
-         *  @param  {Editor} editor
+         *  A reference to the editor that logged the user's info.
+         *  It must be set before the endscreen can replay anything.
+         *  @name  editor
+         *  @memberOf Endscreen.prototype
+         *  @type {Editor}
          */
-        registerEditor: function (editor) {
-            var self = this;
-            on(dom.byId("replay-button"), "click", function () {
-                self.hide();
-                editor.show();
-                editor.playback();
-            });
+
+        /**
+         *  Replays the user's interview typing.
+         *  @memberOf Endscreen.prototype
+         *  @todo  THIS is surely where the media should get played, not
+         *      the editor.
+         */
+        replay: function () {
+            this.hide();
+            this.editor.show();
+            this.editor.playback();
         },
 
         /**
