@@ -92,9 +92,24 @@ define([
                 }
             }, 250);
 
-            on(dom.byId("user-input-button"), "click", lang.hitch(this, this.evaluateAnswer));
-
             this.loadQuestions();
+        },
+
+        // For now.
+        startup: function () {
+            var self = this;
+            $("#langoptions").change(function(){
+                var language = $(this).val();
+                setTimeout(function () {
+                    self.addMessage(choose(["What's your favorite part about " + language + "?",
+                        "Why do you want to use " + language + " for this?"
+                        ]));
+                }, 500);
+            });
+        },
+
+        getQuestion: function () {
+            return this.currentQuestion;
         },
 
         /**
@@ -113,6 +128,7 @@ define([
                     self.endInterview();
                 }
             });
+            this.startup();
         },
 
         /**
@@ -196,7 +212,7 @@ define([
          */
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
-                this.editor.setValue('');
+                this.editor.editor.setValue('');
                 this.currentQuestion = this.questions[this.nextQuestion++];
                 var message = this.currentQuestion.desc;
                 this.addMessage(this.currentQuestion.desc);
@@ -268,45 +284,40 @@ define([
          *  next question if the answer was correct.
          *  @memberof Interviewer.prototype
          */
-        evaluateAnswer: function () {
+        evaluateAnswer: function (data) {
             function removeWhiteSpace(str) {
                 return str;//str.replace(/ /g,'');
             }
             var self = this;
-            this.editor.runAndTest(this.currentQuestion, function (data) {
-                data = data.result;
-                var failedCases = [];
-                var numSuccesses = 0;
-                _.each(data.stdout, function (output, testnum) {
-                    if (removeWhiteSpace(output) == removeWhiteSpace(self.currentQuestion.testcases[testnum][1])) {
-                        ++numSuccesses;
-                    } else {
-                        failedCases.push(testnum);
-                    }
-                });
+            data = data.result;
+            console.log(this.currentQuestion.testcases);
+            var failedCases = _.filter(this.currentQuestion.testcases, function (test, testnum) {
+                return (removeWhiteSpace(data.stdout[testnum]) !== removeWhiteSpace(test[1]));
+            }, this);
+            var numFailures = failedCases.length;
+            var numSuccesses = data.stdout.length - numFailures;
 
-                if (failedCases.length > 0) {
-                    if (numSuccesses === 0) {
-                        self.addMessage(choose(["Okay.  Why don't you try walking through an example?",
-                            "Hm, I'm not sure this does quite what you're thinking.  Try stepping through it.",
-                            "I don't think this is quite going to work."]));
-                    } else if (numSuccesses < failedCases.length) {
-                        self.addMessage(choose(["Are you sure this works correctly in all cases?",
-                            "How about making a test case and walking through it for me?"]));
-                    } else {
-                        self.addMessage("I think you may have missed something.  Try walking through the code on this example: " + choose(failedCases));
-                    }
+            if (numFailures > 0) {
+                if (numSuccesses === 0) {
+                    this.addMessage(choose(["Okay.  Why don't you try walking through an example?",
+                        "I'm not sure this does quite what you're thinking.  Try stepping through it.",
+                        "I don't think this is quite going to work."]));
+                } else if (numSuccesses < numFailures) {
+                    this.addMessage(choose(["Are you sure this works correctly in all cases?",
+                        "How about making a test case and walking through it?"]));
                 } else {
-                    self.addMessage(choose(["Okay, that looks fine to me.",
-                        "Sure, that should work.",
-                        "I think this'll work."]));
-                    setTimeout(function () {
-                        self.getNextQuestionOr(function () {
-                            self.endInterview();
-                        });
-                    }, 3000)
+                    this.addMessage("I think you may have missed something.  Try walking through the code on this example: " + choose(failedCases));
                 }
-            });
+            } else {
+                this.addMessage(choose(["Okay, that looks fine to me.",
+                    "Sure, that should work.",
+                    "I think this'll work."]));
+                setTimeout(function () {
+                    self.getNextQuestionOr(function () {
+                        self.endInterview();
+                    });
+                }, 3000)
+            }
         }
     });
     return Interviewer;

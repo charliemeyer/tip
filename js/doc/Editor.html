@@ -95,7 +95,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line17">line 17</a>
+        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -216,7 +216,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line52">line 52</a>
+        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line50">line 50</a>
     </li></ul></dd>
     
 
@@ -296,7 +296,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line43">line 43</a>
+        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -323,7 +323,7 @@
 
     
 
-    <h4 class="name" id="constructor"><span class="type-signature"></span>constructor<span class="signature">(args)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="constructor"><span class="type-signature"></span>constructor<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
@@ -335,125 +335,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>args</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>editor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    "editor"
-                
-                </td>
-            
-
-            <td class="description last">The id of the editor for
-     this object to control.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -489,7 +370,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line37">line 37</a>
+        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line40">line 40</a>
     </li></ul></dd>
     
 
@@ -497,14 +378,6 @@
 
     
 
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>As far as encapsulation goes, it would be better to create
-     the editor within the constructor.</li>
-        </ul>
-    </dd>
     
 </dl>
 
@@ -579,7 +452,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line132">line 132</a>
+        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line158">line 158</a>
     </li></ul></dd>
     
 
@@ -662,7 +535,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line75">line 75</a>
+        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line105">line 105</a>
     </li></ul></dd>
     
 
@@ -670,6 +543,14 @@
 
     
 
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>Apparently you can call editor.setReadOnly(true).  We should
+     try that instead of whatever we're doing now.</li>
+        </ul>
+    </dd>
     
 </dl>
 
@@ -693,7 +574,7 @@
 
     
 
-    <h4 class="name" id="runAndTest"><span class="type-signature"></span>runAndTest<span class="signature">(question, callback)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="runAndTest"><span class="type-signature"></span>runAndTest<span class="signature">(question)</span><span class="type-signature"></span></h4>
 
     
 
@@ -701,7 +582,7 @@
 
 <div class="description">
     Remotely runs the code that the user has typed in the editor.
- Calls the callback function with the results of the test.
+ Called evaluateAnswer(), which should be linked to the interviewer.
 </div>
 
 
@@ -832,30 +713,6 @@
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>callback</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Will be passed the response of the test,
-     which has a "stdout" property to say what the code printed.</td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -893,7 +750,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line104">line 104</a>
+        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -901,14 +758,6 @@
 
     
 
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>Instead of a callback, probably should return a Deferred
-     object.</li>
-        </ul>
-    </dd>
     
 </dl>
 
@@ -983,7 +832,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line140">line 140</a>
+        <a href="Editor.js.html">Editor.js</a>, <a href="Editor.js.html#line166">line 166</a>
     </li></ul></dd>
     
 
@@ -1031,7 +880,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sat Oct 31 2015 16:49:22 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sat Oct 31 2015 20:04:04 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

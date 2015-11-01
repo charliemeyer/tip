@@ -1,6 +1,9 @@
 define([
         "dojo/_base/declare",
         "dojo/_base/lang",
+        "dijit/_WidgetBase",
+        "dijit/_TemplatedMixin",
+        "dojo/text!js/templates/editor.html",
         "dojo/dom-style",
         "dojo/on",
         "js/media",
@@ -8,6 +11,9 @@ define([
     ], function (
         declare,
         lang,
+        _WidgetBase,
+        _TemplatedMixin,
+        editorTemplateString,
         domStyle,
         on,
         media,
@@ -23,23 +29,15 @@ define([
      *  @extends ace.Editor
      *  @requires ace
      */
-    var Editor = declare(null, {
+    var Editor = declare([_WidgetBase, _TemplatedMixin], {
+        templateString: editorTemplateString,
+
         /**
          *  @constructor
          *  @function
          *  @memberof Editor.prototype
-         *  @param  {Object} args
-         *  @param {string} [args.editor="editor"] The id of the editor for
-         *      this object to control.
-         *  @todo As far as encapsulation goes, it would be better to create
-         *      the editor within the constructor.
          */
         constructor: function (args) {
-            var editorId = args.editor || "editor";
-            lang.mixin(this, ace.edit("editor"));
-            this.setTheme("ace/theme/textmate");
-            this.session.setMode("ace/mode/javascript");
-
             /**
              *  The time that the editor was created.  Used as a benchmark
              *  to know when, relatively, changes were made.
@@ -57,30 +55,61 @@ define([
              *  @memberof Editor.prototype
              *  @todo Use an object instead of a tuple.
              */
-            this.changelog = [[0, this.getValue()]];
+            this.changelog = [[0, ""]];
+
+            this.evaluateAnswer = function () {
+                console.log("ERROR: No evaluateAnswer callback connected!");
+            }
+            // this.$blockScrolling = Infinity;
+        },
+
+        postCreate: function () {
+            this.inherited(arguments)
             var self = this;
-            this.on('change', function(e) {
+            this.editor =  ace.edit(this.editor);
+            this.editor.setTheme("ace/theme/textmate");
+            this.editor.session.setMode("ace/mode/javascript");
+            this.editor.on('change', function(e) {
                 var timediff = ((new Date()).getTime() - self.initTime);
-                var code_value = self.getValue();
+                var code_value = self.editor.getValue();
                 self.changelog.push([timediff, code_value]);
             });
-            // this.$blockScrolling = Infinity;
+        },
+
+        startup: function () {
+            var self = this;
+            // Charlie's sick jquery code fuck this dojo bozo
+            $("#syntaxhelp").change(function(){
+                self.editor.getSession().setUseWorker($(this).prop("checked"));
+            });
+
+            $("#langoptions").change(function(){
+                var language = $(this).val();
+                self.editor.session.setMode("ace/mode/" + language);
+            });
+
+            $("#user-input-button").click(function () {
+                self.runAndTest(self.getQuestion());
+            });
+
+            return this.inherited(arguments);
         },
 
         /**
          *  Plays back in real time the user's keystrokes, so they can see
          *  the changes they made.
          *  @memberof Editor.prototype
+         *  @todo  Apparently you can call editor.setReadOnly(true).  We should
+         *      try that instead of whatever we're doing now.
          */
         playback: function() {
-            $('#editor').hide();
-            $('#results').show();
-            var div = document.getElementById('editor');
+            domStyle.set(this.editor.container, "display", "none");
+            var resultsArea = this.resultsArea;
             this.changelog.forEach(function (e) {
                 var timediff = e[0];
                 var code = e[1];
                 setTimeout(function() {
-                    $('#results').html(code);
+                    resultsArea.innerHTML = code;
                 }, timediff);
             });
            media.play_wav();
@@ -88,7 +117,7 @@ define([
 
         /**
          *  Remotely runs the code that the user has typed in the editor.
-         *  Calls the callback function with the results of the test.
+         *  Calls evaluateAnswer(), which should be linked to the interviewer.
          *  @memberof Editor.prototype
          *  @param {Object} question The question details to test the code
          *      against.
@@ -96,12 +125,8 @@ define([
          *      user was supposed to write.
          *  @param {string} question.testcases The tests to run, of which the
          *      first element of each array is the input to supply.
-         *  @param {function} callback Will be passed the response of the test,
-         *      which has a "stdout" property to say what the code printed.
-         *  @todo Instead of a callback, probably should return a Deferred
-         *      object.
          */
-        runAndTest: function (question, callback) {
+        runAndTest: function (question) {
             // TODO: These things should be static properties of the class?
             var base_url = "/test";
             var api_key = "hackerrank|538314-385|8ca6ef0fcb4573c92eedb20c04fec92a0b5c8be6";
@@ -111,7 +136,7 @@ define([
             };
             var language = $("#langoptions").val();
             var lang = lang_map[language];
-            var source = this.getValue() + "\n" + boilerplates[language];
+            var source = this.editor.getValue() + "\n" + boilerplates[language];
             var params = {
                 source: source,
                 lang: lang,
@@ -120,8 +145,9 @@ define([
                     return elem[0]+"";
                 }))
             };
+            var self = this;
             $.post(base_url, params, function(data){
-                callback(data);
+                self.evaluateAnswer(data);
             }).fail(/*alert("failed to check code")*/);
         },
 
@@ -130,7 +156,7 @@ define([
          *  @memberof Editor.prototype
          */
         hide: function () {
-            domStyle.set(this.container, "display", "none");
+            domStyle.set(this.domNode, "display", "none");
         },
 
         /**
@@ -138,7 +164,7 @@ define([
          *  @memberof Editor.prototype
          */
         show: function () {
-            domStyle.set(this.container, "display", "block");
+            domStyle.set(this.domNode, "display", "block");
         }
     });
 

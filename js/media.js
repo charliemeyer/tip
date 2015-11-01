@@ -85,7 +85,7 @@ define([], function () {
     function updateVolume(stream) {
         // initialize recording
         setUpStream(stream);
-        editor.initTime = (new Date()).getTime();
+        //editor.initTime = (new Date()).getTime();
 
         // set up volume listener
         globalStream = stream;
@@ -283,7 +283,7 @@ define([], function () {
   return {
     load: execute,
     play_wav: play_wav,
-    checkVolume: printVolume 
+    checkVolume: printVolume
   }
 
 });
