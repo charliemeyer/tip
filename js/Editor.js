@@ -4,6 +4,8 @@ define([
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
         "dojo/text!js/templates/editor.html",
+        "dojo/text!js/languages.json",
+        "dojo/string",
         "dojo/dom-style",
         "dojo/on",
         "js/media",
@@ -14,6 +16,8 @@ define([
         _WidgetBase,
         _TemplatedMixin,
         editorTemplateString,
+        languageJsonString,
+        string,
         domStyle,
         on,
         media,
@@ -32,6 +36,7 @@ define([
     var Editor = declare([_WidgetBase, _TemplatedMixin], {
         templateString: editorTemplateString,
 
+        languages: JSON.parse(languageJsonString),
         /**
          *  @constructor
          *  @function
@@ -128,18 +133,18 @@ define([
          */
         runAndTest: function (question) {
             // TODO: These things should be static properties of the class?
+            // And API key should prob be on the backend?
             var base_url = "/test";
             var api_key = "hackerrank|538314-385|8ca6ef0fcb4573c92eedb20c04fec92a0b5c8be6";
-            var lang_map = {"c":1,"c++":2,"java":3,"python":5,"perl":6,"php":7,"Ruby":8,"csharp":9,"mysql":10,"oracle":11,"haskell":12,"clojure":13,"bash":14,"scala":15,"erlang":16,"lua":18,"javascript":20,"go":21,"d":22,"ocaml":23,"r":24,"pascal":25,"sbcl":26,"python3":30,"groovy":31,"objectivec":32,"fsharp":33,"cobol":36,"visualbasic":37,"lolcode":38,"smalltalk":39,"tcl":40,"whitespace":41,"tsql":42,"java8":43,"db2":44,"octave":46,"xquery":48,"racket":49,"rust":50,"swift":51,"fortran":54};
-            var boilerplates = {
-                "python": "print " + question.function_name + "(input())"
-            };
             var language = $("#langoptions").val();
-            var lang = lang_map[language];
-            var source = this.editor.getValue() + "\n" + boilerplates[language];
+            var lang_code = this.languages[language]["language_code"];
+            var source = string.substitute(this.languages[language]["execute"], {
+                "function_body": this.editor.getValue(),
+                "function_name": question.function_name
+            });
             var params = {
                 source: source,
-                lang: lang,
+                lang: lang_code,
                 api_key: api_key,
                 testcases: JSON.stringify(_.map(question.testcases, function (elem) {
                     return elem[0]+"";

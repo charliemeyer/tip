@@ -167,7 +167,7 @@ define([
                 }, 3000);
             }, function (error) {
                 self.questions = [{
-                    function_name: "sort(list, length)",
+                    function_name: "sort",
                     question: "Sort a list",
                     desc: "Sort a list of numbers.",
                     testcases: [["[3, 2, 1]", "[1, 2, 3]"]]

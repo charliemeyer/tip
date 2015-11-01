@@ -1,0 +1,129 @@
+{
+    "c": {
+        "language_code": 1
+    },
+    "c++": {
+        "language_code": 2
+    },
+    "java": {
+        "language_code": 3
+    },
+    "python": {
+        "language_code": 5,
+        "execute": "${function_body}\n\nprint ${function_name}(input())"
+    },
+    "perl": {
+        "language_code": 6
+    },
+    "php": {
+        "language_code": 7
+    },
+    "Ruby": {
+        "language_code": 8
+    },
+    "csharp": {
+        "language_code": 9
+    },
+    "mysql": {
+        "language_code": 10
+    },
+    "oracle": {
+        "language_code": 11
+    },
+    "haskell": {
+        "language_code": 12
+    },
+    "clojure": {
+        "language_code": 13
+    },
+    "bash": {
+        "language_code": 14
+    },
+    "scala": {
+        "language_code": 15
+    },
+    "erlang": {
+        "language_code": 16
+    },
+    "lua": {
+        "language_code": 18
+    },
+    "javascript": {
+        "language_code": 20
+    },
+    "go": {
+        "language_code": 21
+    },
+    "d": {
+        "language_code": 22
+    },
+    "ocaml": {
+        "language_code": 23
+    },
+    "r": {
+        "language_code": 24
+    },
+    "pascal": {
+        "language_code": 25
+    },
+    "sbcl": {
+        "language_code": 26
+    },
+    "python3": {
+        "language_code": 30
+    },
+    "groovy": {
+        "language_code": 31
+    },
+    "objectivec": {
+        "language_code": 32
+    },
+    "fsharp": {
+        "language_code": 33
+    },
+    "cobol": {
+        "language_code": 36
+    },
+    "visualbasic": {
+        "language_code": 37
+    },
+    "lolcode": {
+        "language_code": 38
+    },
+    "smalltalk": {
+        "language_code": 39
+    },
+    "tcl": {
+        "language_code": 40
+    },
+    "whitespace": {
+        "language_code": 41
+    },
+    "tsql": {
+        "language_code": 42
+    },
+    "java8": {
+        "language_code": 43
+    },
+    "db2": {
+        "language_code": 44
+    },
+    "octave": {
+        "language_code": 46
+    },
+    "xquery": {
+        "language_code": 48
+    },
+    "racket": {
+        "language_code": 49
+    },
+    "rust": {
+        "language_code": 50
+    },
+    "swift": {
+        "language_code": 51
+    },
+    "fortran": {
+        "language_code": 54
+    }
+}
