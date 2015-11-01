@@ -62,6 +62,16 @@ define([
         },
 
         /**
+         *  Called when the widget is in the DOM, ready to be shown to the
+         *  user.
+         *  @memberOf ChatBox.prototype
+         */
+        startup: function () {
+            this.inherited(arguments);
+            this.resize();
+        },
+
+        /**
          *  Adds a message to the chat box.  The message will be read
          *  aloud once all previous messages have been read.
          *  @memberof ChatBox.prototype
@@ -76,7 +86,6 @@ define([
                 "class": "chat-message"
             }, this.containerNode);
 
-            var messageHeight = domGeom.getMarginBox(messageBox).h + this.messageMargin;
             setTimeout(function () {
                 var fadeOutAnimation = fx.fadeOut({
                         node: messageBox,
@@ -87,9 +96,23 @@ define([
                     });
                 fadeOutAnimation.play();
             }, timeOut);
-            this._shiftUp(messageHeight, messageBox);
-
             this._addToQueue(messageText);
+            this.resize();
+        },
+
+        /**
+         *  Adjusts the position of child nodes.  This function should be
+         *  called when the widget is resized.
+         *  @memberOf ChatBox.prototype
+         */
+        resize: function () {
+            var children = this.containerNode.children;
+            var yPos = this.messageMargin;
+            for(var i = children.length - 1; i >= 0; --i) {
+                var messageHeight = domGeom.getMarginBox(children[i]).h;
+                domStyle.set(children[i], "bottom", yPos + "px");
+                yPos += messageHeight + this.messageMargin;
+            }
         },
 
         /**
@@ -101,6 +124,9 @@ define([
          *  @memberof ChatBox.prototype
          *  @param {string} message The text to add to the queue.  Such text
          *      should be "plaintext," ie. without HTML formatting.
+         *  @todo The reading part should probably be a separate component.
+         *      Then maybe it would add a message to the chatbox, only when
+         *      preceding messages have been read.
          */
         _addToQueue: function (message) {
             var self = this;
@@ -114,30 +140,6 @@ define([
                     }
                 });
             }
-        },
-
-        /**
-         *  Physically shifts the child nodes upwards by a particular amount.
-         *  Used to make room for new messages in the queue.  amt is the
-         *  amount, in pixels, to shift items up.  ignore is an optional node
-         *  or list of nodes to --not-- shift.
-         *  @private
-         *  @memberof ChatBox.prototype
-         *  @param {number} amt The amount, in pixels, by which messages should
-         *      be shifted.  A positive number shifts up; negative shifts down.
-         *  @param {domNode|domNode[]} [ignore=[]] One or more elements to NOT
-         *      shift.
-         */
-        _shiftUp: function (amt, ignore) {
-            if (!_.isArray(ignore)) {
-                ignore = [ignore];
-            }
-            _.each(this.containerNode.children, function (child) {
-                if (!_.includes(ignore, child)) {
-                    var bottom = parseInt(domStyle.get(child, "bottom"));
-                    domStyle.set(child, "bottom", bottom + amt + "px");
-                }
-            });
         }
     });
 
