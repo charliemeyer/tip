@@ -1,9 +1,25 @@
-#chat-area {
+.chatbox {
     position: relative;
     height: 100%;
 }
 
-.chat-message {
+.chatbox .message-area {
+    /*height: 100%;*/
+}
+
+.chatbox .chatbox-title {
+    width: 100%;
+    color: #A2A2A2;
+    background-color: white;
+    z-index: 1; /* Should be greater than the message area's */
+    /* These are bad; they're to hide messages that go off the top */
+    position: relative;
+    padding: 8px;
+    top: -8px;
+    left: -8px;
+}
+
+.chatbox-message {
     position: absolute;
     bottom: 0;
     background-color: lightblue;

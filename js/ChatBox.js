@@ -36,6 +36,8 @@ define([
     var ChatBox = declare([_WidgetBase, _TemplatedMixin], {
         templateString: chatboxTemplateString,
 
+        baseClass: "chatbox",
+
         /**
          *  @constructor
          *  @function
@@ -83,7 +85,7 @@ define([
             timeOut = timeOut || this.defaultTimeOut;
             var messageBox = domConstruct.create("div", {
                 "innerHTML": messageText,
-                "class": "chat-message"
+                "class": this.baseClass + "-message"
             }, this.containerNode);
 
             setTimeout(function () {
