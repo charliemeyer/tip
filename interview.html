@@ -77,6 +77,10 @@
                 return interviewer.getQuestion.call(interviewer);
             };
 
+            editor.sendLanguageChange = function (lang) {
+                interviewer.onLanguageChange(lang);
+            }
+
             interviewer.beginInterview();
         });
     </script>

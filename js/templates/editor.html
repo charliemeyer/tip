@@ -2,7 +2,7 @@
     <div style='width: 100%; height: 500px;' data-dojo-attach-point="editor"></div>
     <pre style='font-size:14px' data-dojo-attach-point="resultsArea"></pre>
     <div id="bottombar">Language:
-        <select id='langoptions'>
+        <select data-dojo-attach-point="languageDropDown" data-dojo-attach-event="change:_onLanguageChange">
             <option value='javascript'>Javascript</option>
             <option default value='python'>Python</option>
             <option value='c++'>C++</option>
@@ -10,6 +10,6 @@
             <option value='ruby'>Ruby</option>
             <option value='java'>Java</option>
         </select>
-        | Show syntax mistakes? <input id='syntaxhelp' type='checkbox'>
-    <button id="user-input-button" style='float:right;'>Test Solution</button>
+        | Show syntax mistakes? <input type='checkbox' data-dojo-attach-point="syntaxHelpBox" data-dojo-attach-event="change:_onSyntaxHelpChange">
+    <button style='float:right;' data-dojo-attach-event="ondijitclick:runAndTest">Test Solution</button>
 </div>

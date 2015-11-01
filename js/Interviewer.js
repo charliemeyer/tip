@@ -92,17 +92,14 @@ define([
         },
 
         // For now.
-        startup: function () {
+        onLanguageChange: function (language) {
             var self = this;
-            $("#langoptions").change(function(){
-                var language = $(this).val();
-                setTimeout(function () {
-                    self.addMessage(self.makeMessage([
-                        "What's your favorite part about " + language + "?",
-                        "Why do you want to use " + language + " for this?"
-                    ]));
-                }, 500);
-            });
+            setTimeout(function () {
+                self.addMessage(self.makeMessage([
+                    "What's your favorite part about " + language + "?",
+                    "Why do you want to use " + language + " for this?"
+                ]));
+            }, 500);
         },
 
         getQuestion: function () {
@@ -135,7 +132,6 @@ define([
                     self.endInterview();
                 }
             });
-            this.startup();
         },
 
         /**

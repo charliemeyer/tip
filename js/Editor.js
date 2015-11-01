@@ -3,8 +3,10 @@ define([
         "dojo/_base/lang",
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
+        "dijit/_OnDijitClickMixin",
         "dojo/text!js/templates/editor.html",
         "dojo/text!js/languages.json",
+        "dojo/request",
         "dojo/string",
         "dojo/dom-style",
         "dojo/on",
@@ -15,8 +17,10 @@ define([
         lang,
         _WidgetBase,
         _TemplatedMixin,
+        _DijitClickMixin,
         editorTemplateString,
         languageJsonString,
+        request,
         string,
         domStyle,
         on,
@@ -33,10 +37,11 @@ define([
      *  @extends ace.Editor
      *  @requires ace
      */
-    var Editor = declare([_WidgetBase, _TemplatedMixin], {
+    var Editor = declare([_WidgetBase, _TemplatedMixin, _DijitClickMixin], {
         templateString: editorTemplateString,
 
         languages: JSON.parse(languageJsonString),
+
         /**
          *  @constructor
          *  @function
@@ -62,6 +67,8 @@ define([
              */
             this.changelog = [[0, ""]];
 
+            this.currentLanguage = null;
+
             this.evaluateAnswer = function () {
                 console.log("ERROR: No evaluateAnswer callback connected!");
             }
@@ -73,31 +80,15 @@ define([
             var self = this;
             this.editor =  ace.edit(this.editor);
             this.editor.setTheme("ace/theme/textmate");
-            this.editor.session.setMode("ace/mode/javascript");
             this.editor.on('change', function(e) {
                 var timediff = ((new Date()).getTime() - self.initTime);
                 var code_value = self.editor.getValue();
                 self.changelog.push([timediff, code_value]);
             });
-        },
 
-        startup: function () {
-            var self = this;
-            // Charlie's sick jquery code fuck this dojo bozo
-            $("#syntaxhelp").change(function(){
-                self.editor.getSession().setUseWorker($(this).prop("checked"));
-            });
-
-            $("#langoptions").change(function(){
-                var language = $(this).val();
-                self.editor.session.setMode("ace/mode/" + language);
-            });
-
-            $("#user-input-button").click(function () {
-                self.runAndTest(self.getQuestion());
-            });
-
-            return this.inherited(arguments);
+            this.currentLanguage = this.languageDropDown.value;
+            this.editor.session.setMode("ace/mode/" + this.currentLanguage);
+            this.editor.getSession().setUseWorker(this.syntaxHelpBox.checked);
         },
 
         /**
@@ -122,21 +113,17 @@ define([
 
         /**
          *  Remotely runs the code that the user has typed in the editor.
-         *  Calls evaluateAnswer(), which should be linked to the interviewer.
+         *  Calls evaluateAnswer() and getQuestion(), both of which should be
+         *  linked to the interviewer.
          *  @memberof Editor.prototype
-         *  @param {Object} question The question details to test the code
-         *      against.
-         *  @param {string} question.function_name The name of the function the
-         *      user was supposed to write.
-         *  @param {string} question.testcases The tests to run, of which the
-         *      first element of each array is the input to supply.
          */
-        runAndTest: function (question) {
+        runAndTest: function () {
             // TODO: These things should be static properties of the class?
             // And API key should prob be on the backend?
             var base_url = "/test";
             var api_key = "hackerrank|538314-385|8ca6ef0fcb4573c92eedb20c04fec92a0b5c8be6";
-            var language = $("#langoptions").val();
+            var question = this.getQuestion();
+            var language = this.currentLanguage;
             var lang_code = this.languages[language]["language_code"];
             var source = string.substitute(this.languages[language]["execute"], {
                 "function_body": this.editor.getValue(),
@@ -151,9 +138,11 @@ define([
                 }))
             };
             var self = this;
-            $.post(base_url, params, function(data){
+            request.post(base_url, {data: params}).then(function(data){
                 self.evaluateAnswer(data);
-            }).fail(/*alert("failed to check code")*/);
+            }, function (error) {
+                console.log("OH NO COULDN'T POST TO THE SERVER");
+            });
         },
 
         /**
@@ -170,6 +159,18 @@ define([
          */
         show: function () {
             domStyle.set(this.domNode, "display", "block");
+        },
+
+        _onLanguageChange: function (e) {
+            var language = e.currentTarget.value;
+            // TODO: Doesn't work for C or C++
+            this.editor.session.setMode("ace/mode/" + language);
+            this.currentLanguage = language;
+            this.sendLanguageChange(language);
+        },
+
+        _onSyntaxHelpChange: function (e) {
+            this.editor.getSession().setUseWorker(e.currentTarget.checked);
         }
     });
 
