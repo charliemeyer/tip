@@ -38,11 +38,14 @@
             });
         });
         // Starts the app
-        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "js/Endscreen", "dojo/dom", "dojo/domReady!"],
-            function (Interviewer, ChatBox, Timer, Editor, Endscreen, dom) {
+        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "js/Endscreen", "dojo/dom", "dojo/io-query", "dojo/domReady!"],
+            function (Interviewer, ChatBox, Timer, Editor, Endscreen, dom, ioQuery) {
             require(["js/media"], function (media) {
                 media.load();
             });
+
+            var queryString = document.location.search.substr(document.location.search[0] === "?" ? 1 : 0);
+            var urlParams = ioQuery.queryToObject(queryString);
 
             var editor = new Editor({
                 editor: "editor"
@@ -53,7 +56,7 @@
             }).placeAt(dom.byId("chat-area"));
 
             var timer = new Timer({
-                minutes: 15
+                minutes: urlParams["duration"]
             }).placeAt(dom.byId("time-area"));
 
             var endscreen = new Endscreen();
