@@ -45,10 +45,6 @@
         media
     ) {
 
-    function choose(array) {
-        return array[Math.floor(Math.random() * array.length)];
-    }
-
     /**
      *  The Interviewer class manages and coordinates the other objects on the
      *  page.  It is the primary thing that interacts with the user.
@@ -129,9 +125,10 @@
             $("#langoptions").change(function(){
                 var language = $(this).val();
                 setTimeout(function () {
-                    self.addMessage(choose(["What's your favorite part about " + language + "?",
+                    self.addMessage(self.makeMessage([
+                        "What's your favorite part about " + language + "?",
                         "Why do you want to use " + language + " for this?"
-                        ]));
+                    ]));
                 }, 500);
             });
         },
@@ -147,8 +144,18 @@
          */
         beginInterview: function () {
             var self = this;
-            var intro = "Hi! My name is Bill Gates. Let's get things started with a coding question.";
+            var intro = this.makeMessage(
+                ["Hi", "Hello"], ", my name is ",
+                ["Bill", "Stephen"], " ",
+                ["Gates", "Hawking"], ".  ",
+                ["It's nice ", "It's a pleasure", "I'm glad", "I'm happy"],
+                " to meet you."
+            );
             this.addMessage(intro);
+
+            this.addMessage(this.makeMessage(
+                "Let's get started with some coding questions."
+            ));
 
             this.timer.runTimer(function (endedSoon) {
                 if (!endedSoon) {
@@ -171,7 +178,22 @@
             this.timer.stopTimer();
             this.editor.hide();
             this.endscreen.placeAt(dom.byId("main-area")).show();
-            this.addMessage("And that's all it for the coding part of the interview!");
+            this.addMessage(this.makeMessage(
+                "That's it for the coding part of the interview.  ",
+                [
+                    "It's been a pleasure speaking with you.  ",
+                    "I'm glad we got the chance to talk.  ",
+                    "Thanks for your time.  ",
+                    "Thank you for your time.  ",
+                    ""
+                ], [
+                    "We should get back to you in a few days.  ",
+                    ""
+                ], [
+                    "I wish you the best of luck",
+                    "Good luck"
+                ], ["!", "."]
+            ));
             this.canBotherUser = false;
             clearTimeout(this.waitingID);
             document.getElementById('bottombar').style.display = 'none';
@@ -195,7 +217,7 @@
                 }, 3000);
             }, function (error) {
                 self.questions = [{
-                    function_name: "sort(list, length)",
+                    function_name: "sort",
                     question: "Sort a list",
                     desc: "Sort a list of numbers.",
                     testcases: [["[3, 2, 1]", "[1, 2, 3]"]]
@@ -261,6 +283,39 @@
         },
 
         /**
+         *  Creates a random message, choosing one element from each of the
+         *  parts passed in.  One string is chosen from each parameter, and
+         *  they are concatenated together, in order.
+         *  @memberOf Interviewer.prototype
+         *  @example
+         *  this.makeMessage(["Hi", "Hello", "Sup"], ", my name is ",
+         *      ["Bill Gates", "Stephen Hawking", "Bill Hawking"]);
+         *  // Possible results are:
+         *  //   "Hi, my name is Bill Gates"
+         *  //   "Sup, my name is Stephen Hawking"
+         *  //   "Hello, my name is Bill Hawking"
+         *  // etc.
+         *  @param  {...string|string[]} messages A list of messages to choose
+         *      between.  Parameters are variadic, ie. you can just list each
+         *      part of the message as a separate parameter.
+         *  @return {string} The message created.
+         *  @todo  This could recursively resolve things in a Markov-chain sort
+         *      of way, ie. allow arrays within arrays for choices within
+         *      choices.
+         */
+        makeMessage: function () {
+            var message = "";
+            _.each(arguments, function (messages) {
+                if (!_.isArray(messages)) {
+                    message += messages;
+                } else {
+                    message += _.sample(messages);
+                }
+            });
+            return message;
+        },
+
+        /**
          *  Searches code near where the user is typing to see if there's
          *  something that can be commented on.  If so, a comment is made.
          *  @memberof Interviewer.prototype
@@ -292,16 +347,22 @@
             var variables = /(\w*)\s*=/.exec(line);
             if (_.contains(line, "if")) {
                 this.explainedLines.push(number);
-                return choose(["What is that if statement on line " + number + " testing for?",
-                    "Can you explain the check you make on line " + number + "?"]);
+                return this.makeMessage([
+                    "What is that if statement on line " + number + " testing for?",
+                    "Can you explain the check you make on line " + number + "?"
+                ]);
             } else if (_.contains(line, "while") || _.contains(line, "for")) {
                 this.explainedLines.push(number);
-                return choose(["Can you explain the invariant for the loop on line " + number + "?",
-                    "What will be the time complexity of the loop on line " + number + "?"]);
+                return this.makeMessage([
+                    "Can you explain the invariant for the loop on line " + number + "?",
+                    "What will be the time complexity of the loop on line " + number + "?"
+                ]);
             } else if (variables.length > 1) {
-                return choose(["What are you using " + variables[1] + " for?",
-                    "What does " + variables[1] + " hold?",
-                    "What value will " + variables[1] + " have after line " + number + "?"]);
+                return this.makeMessage([
+                        "What are you using " + variables[1] + " for?",
+                        "What does " + variables[1] + " hold?",
+                        "What value will " + variables[1] + " have after line " + number + "?"
+                ]);
             } else {
                 return false;
             }
@@ -318,7 +379,6 @@
             }
             var self = this;
             data = data.result;
-            console.log(this.currentQuestion.testcases);
             var failedCases = _.filter(this.currentQuestion.testcases, function (test, testnum) {
                 return (removeWhiteSpace(data.stdout[testnum]) !== removeWhiteSpace(test[1]));
             }, this);
@@ -327,19 +387,36 @@
 
             if (numFailures > 0) {
                 if (numSuccesses === 0) {
-                    this.addMessage(choose(["Okay.  Why don't you try walking through an example?",
-                        "I'm not sure this does quite what you're thinking.  Try stepping through it.",
-                        "I don't think this is quite going to work."]));
+                    this.addMessage(this.makeMessage(
+                        ["Okay.  ", ""],
+                        [
+                          "I'm not sure this does quite what you're thinking.",
+                          "I don't think this is quite going to work.",
+                          "Do you see anything wrong with the code?"
+                        ], "  "
+                        [
+                          "Try stepping through it.",
+                          "Why don't you try walking through an example?",
+                          "Try an example input."
+                        ]
+                    ));
                 } else if (numSuccesses &lt; numFailures) {
-                    this.addMessage(choose(["Are you sure this works correctly in all cases?",
-                        "How about making a test case and walking through it?"]));
+                    this.addMessage(this.makeMessage([
+                        "Are you sure this works correctly in all cases?",
+                        "How about making a test case and walking through it?"
+                    ]));
                 } else {
-                    this.addMessage("I think you may have missed something.  Try walking through the code on this example: " + choose(failedCases));
+                    this.addMessage("I think you may have missed something.  Try walking through the code on this example: " + _.sample(failedCases));
                 }
             } else {
-                this.addMessage(choose(["Okay, that looks fine to me.",
-                    "Sure, that should work.",
-                    "I think this'll work."]));
+                this.addMessage(this.makeMessage(
+                    ["Okay.  ", "Sure.  ", "Good.  ", ""],
+                    [
+                      "That looks fine to me.",
+                      "That should work.",
+                      "I think this'll work."
+                    ]
+                ));
                 setTimeout(function () {
                     self.getNextQuestionOr(function () {
                         self.endInterview();
@@ -366,7 +443,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sat Oct 31 2015 20:04:04 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sun Nov 01 2015 00:13:04 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>
