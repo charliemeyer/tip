@@ -44,6 +44,7 @@ define([
             this.timer = args.timer;
             this.editor = args.editor;
             this.endscreen = args.endscreen;
+            this.questionPrompt = args.questionPrompt;
             this.endscreen.editor = this.editor;
             /**
              *  A list of questions for the interviewer to ask.
@@ -165,7 +166,7 @@ define([
             this.canBotherUser = false;
             clearTimeout(this.waitingID);
             document.getElementById('bottombar').style.display = 'none';
-            document.getElementById('question-prompt').innerHTML = 'Done with interview!';
+            this.questionPrompt.set("content", "Done with interview!");
         },
 
         /**
@@ -234,7 +235,7 @@ define([
                 this.currentQuestion = this.questions[this.nextQuestion++];
                 var message = this.currentQuestion.desc;
                 this.addMessage(this.currentQuestion.desc);
-                dom.byId("question-prompt").innerHTML = "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question;
+                this.questionPrompt.set("content", "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question);
             } else {
                 callback.call(this);
             }

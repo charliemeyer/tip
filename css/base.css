@@ -11,6 +11,11 @@ html, body {
     height: 100%;
 }
 
+.dijitBorderContainer-child.dijitAlignTop {
+    font-size: 18px;
+    height: 1.5em;
+}
+
 @keyframes buttonhover{
   from {background-color: #00c853; box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);}
   to {background-color: #4caf50; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);}

@@ -2,8 +2,8 @@
 <html>
 <head>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
     <title>Interview Simulation</title>
     <script type="text/javascript">
@@ -38,8 +38,8 @@
             });
         });
         // Starts the app
-        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "js/Endscreen", "dojo/dom", "dojo/io-query", "dojo/domReady!"],
-            function (Interviewer, ChatBox, Timer, Editor, Endscreen, dom, ioQuery) {
+        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "js/Endscreen", "js/InfoBar", "dojo/dom", "dojo/io-query", "dojo/domReady!"],
+            function (Interviewer, ChatBox, Timer, Editor, Endscreen, InfoBar, dom, ioQuery) {
             require(["js/media"], function (media) {
                 media.load();
             });
@@ -47,9 +47,9 @@
             var queryString = document.location.search.substr(document.location.search[0] === "?" ? 1 : 0);
             var urlParams = ioQuery.queryToObject(queryString);
 
-            var editor = new Editor({
-                editor: "editor"
-            }).placeAt(dom.byId("main-area"));
+            var editor = new Editor().placeAt(dom.byId("main-area"));
+
+            var questionPrompt = new InfoBar().placeAt(dom.byId("question-prompt"));
 
             var chat = new ChatBox({
                 defaultTimeOut: 60 * 5000
@@ -65,7 +65,8 @@
                 textBox: chat,
                 timer: timer,
                 editor: editor,
-                endscreen: endscreen
+                endscreen: endscreen,
+                questionPrompt: questionPrompt
             });
 
             // These connections should be done by some kind of manager class
@@ -93,11 +94,10 @@
         </div>
     </div>
     <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'sidebar', gutters:true, liveSplitters:true" id="borderContainer" style="height:100%; width=100%;">
-        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'">
-            <div id="question-prompt" style='font-size: 18px;'>&nbsp;</div>
+        <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'" id="question-prompt">
         </div>
         <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="splitter:true, region:'right'" style="width: 300px;">
-            <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'" id="time-area"></div>
+            <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'top'" class="top-pane" id="time-area"></div>
             <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" id="chat-area"></div>
         </div>
         <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="splitter:true, region:'center'" id="main-area">
