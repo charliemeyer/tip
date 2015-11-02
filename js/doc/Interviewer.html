@@ -94,7 +94,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line20">line 20</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -192,7 +192,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line70">line 70</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -267,7 +267,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line63">line 63</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -339,7 +339,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line56">line 56</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line58">line 58</a>
     </li></ul></dd>
     
 
@@ -411,7 +411,80 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line49">line 49</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="speakingQueue"><span class="type-signature"></span>speakingQueue<span class="type-signature"> :<a href="EventQueue.html">EventQueue</a></span></h4>
+
+
+
+
+<div class="description">
+    A queue of messages to be given to the user.  Only one can be
+ sent at a time.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="EventQueue.html">EventQueue</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line79">line 79</a>
     </li></ul></dd>
     
 
@@ -438,14 +511,15 @@
 
     
 
-    <h4 class="name" id="addMessage"><span class="type-signature"></span>addMessage<span class="signature">(message)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addMessage"><span class="type-signature"></span>addMessage<span class="signature">(message, params<span class="signature-attributes">opt</span>, thisArg<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Presents the message to the user.
+    Puts the message on a queue of messages to give to the user.
+ Messages are given only after previous messages have been given.
 </div>
 
 
@@ -468,6 +542,8 @@
 
         <th>Type</th>
 
+        
+        <th>Attributes</th>
         
 
         
@@ -494,10 +570,215 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">The message to present.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>whenWritten</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">A callback called when the
+     message is written to chat.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>whenRead</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">A callback called when the
+     message is done being read to the user.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>thisArg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The "this" argument to apply to
+     the callbacks.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>thisArg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">An optional argument to bind to whenRead
+     as its value of this.</td>
         </tr>
 
     
@@ -538,7 +819,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line250">line 250</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line274">line 274</a>
     </li></ul></dd>
     
 
@@ -621,7 +902,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line115">line 115</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line125">line 125</a>
     </li></ul></dd>
     
 
@@ -869,7 +1150,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line42">line 42</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -960,7 +1241,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line145">line 145</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line155">line 155</a>
     </li></ul></dd>
     
 
@@ -1051,7 +1332,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line345">line 345</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line382">line 382</a>
     </li></ul></dd>
     
 
@@ -1134,7 +1415,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line292">line 292</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line329">line 329</a>
     </li></ul></dd>
     
 
@@ -1289,7 +1570,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line314">line 314</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line351">line 351</a>
     </li></ul></dd>
     
 
@@ -1398,7 +1679,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line219">line 219</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line229">line 229</a>
     </li></ul></dd>
     
 
@@ -1531,7 +1812,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line232">line 232</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line242">line 242</a>
     </li></ul></dd>
     
 
@@ -1616,7 +1897,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line179">line 179</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line189">line 189</a>
     </li></ul></dd>
     
 
@@ -1754,7 +2035,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line275">line 275</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line312">line 312</a>
     </li></ul></dd>
     
 
@@ -1930,7 +2211,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line207">line 207</a>
+        <a href="Interviewer.js.html">Interviewer.js</a>, <a href="Interviewer.js.html#line217">line 217</a>
     </li></ul></dd>
     
 
@@ -1972,13 +2253,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ChatBox.html">ChatBox</a></li><li><a href="Editor.html">Editor</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="InfoBar.html">InfoBar</a></li><li><a href="Interviewer.html">Interviewer</a></li><li><a href="Timer.html">Timer</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ChatBox.html">ChatBox</a></li><li><a href="Editor.html">Editor</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="EventQueue.html">EventQueue</a></li><li><a href="InfoBar.html">InfoBar</a></li><li><a href="Interviewer.html">Interviewer</a></li><li><a href="Timer.html">Timer</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sun Nov 01 2015 16:09:47 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sun Nov 01 2015 21:52:09 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

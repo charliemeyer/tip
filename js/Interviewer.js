@@ -5,6 +5,7 @@ define([
         "dojo/dom",
         "dojo/on",
         "util/lodash",
+        "js/EventQueue",
         "js/media",
         "dojo/domReady!"
     ], function (
@@ -14,6 +15,7 @@ define([
         dom,
         on,
         _,
+        EventQueue,
         media
     ) {
 
@@ -74,6 +76,14 @@ define([
              *  @memberof Interviewer.prototype
              */
             this.canBotherUser = false;
+            /**
+             *  A queue of messages to be given to the user.  Only one can be
+             *  sent at a time.
+             *  @name  speakingQueue
+             *  @type {EventQueue}
+             *  @memberOf Interviewer.prototype
+             */
+            this.speakingQueue = new EventQueue();
 
             var self = this;
             var silentMoments = 0;
@@ -234,8 +244,12 @@ define([
                 this.editor.editor.setValue('');
                 this.currentQuestion = this.questions[this.nextQuestion++];
                 var message = this.currentQuestion.desc;
-                this.addMessage(this.currentQuestion.desc);
-                this.questionPrompt.set("content", "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question);
+                this.addMessage(this.currentQuestion.desc, {
+                    whenWritten: function () {
+                        this.questionPrompt.set("content", "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question);
+                    },
+                    thisArg: this
+                }, this);
             } else {
                 callback.call(this);
             }
@@ -243,13 +257,36 @@ define([
         },
 
         /**
-         *  Presents the message to the user.
+         *  Puts the message on a queue of messages to give to the user.
+         *  Messages are given only after previous messages have been given.
          *  @memberof Interviewer.prototype
          *  @param {string} message The message to present.
+         *  @param {Object} [params]
+         *  @param {function} [params.whenWritten] A callback called when the
+         *      message is written to chat.
+         *  @param {function} [params.whenRead] A callback called when the
+         *      message is done being read to the user.
+         *  @param {Object} [params.thisArg] The "this" argument to apply to
+         *      the callbacks.
+         *  @param {Object} [thisArg] An optional argument to bind to whenRead
+         *      as its value of this.
          */
-        addMessage: function (message) {
-            this.textBox.addMessage(message);
+        addMessage: function (message, params) {
+            var self = this;
+            params = params || {};
+            var whenWritten = params["whenWritten"] || _.noop;
+            var whenRead = params["whenRead"] || _.noop;
+            var thisArg = params["thisArg"] || this;
+            this.speakingQueue.enqueue(function (nextMessage) {
+                self.textBox.addMessage(message);
+                whenWritten.call(thisArg);
+                meSpeak.speak(message, {}, function () {
+                    whenRead.call(thisArg);
+                    nextMessage();
+                });
+            });
         },
+
 
         /**
          *  Creates a random message, choosing one element from each of the

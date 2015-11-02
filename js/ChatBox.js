@@ -52,15 +52,6 @@ define([
             args = args || {};
             this.defaultTimeOut = args.defaultTimeOut || 60 * 1000;
             this.messageMargin = args.messageMargin || 10;
-            /**
-             *  A queue of messages to be given to the user.  Only one can be
-             *  sent at a time.
-             *  @name  speakingQueue
-             *  @type {string[]}
-             *  @memberOf ChatBox.prototype
-             *  @todo This should probably be part of the interviewer.
-             */
-            this.speakingQueue = [];
         },
 
         /**
@@ -98,7 +89,6 @@ define([
                     });
                 fadeOutAnimation.play();
             }, timeOut);
-            this._addToQueue(messageText);
             this.resize();
         },
 
@@ -114,33 +104,6 @@ define([
                 var messageHeight = domGeom.getMarginBox(children[i]).h;
                 domStyle.set(children[i], "bottom", yPos + "px");
                 yPos += messageHeight + this.messageMargin;
-            }
-        },
-
-        /**
-         *  Adds a given message to the queue of things to be read aloud.
-         *  If there is nothing else in the queue, it will be read; otherwise
-         *  it will be read only after the messages before it in the queue
-         *  are read.
-         *  @private
-         *  @memberof ChatBox.prototype
-         *  @param {string} message The text to add to the queue.  Such text
-         *      should be "plaintext," ie. without HTML formatting.
-         *  @todo The reading part should probably be a separate component.
-         *      Then maybe it would add a message to the chatbox, only when
-         *      preceding messages have been read.
-         */
-        _addToQueue: function (message) {
-            var self = this;
-            this.speakingQueue.push(message);
-            if (this.speakingQueue.length === 1) {
-                meSpeak.speak(message, {}, function removeFromQueue() {
-                    self.speakingQueue.shift();
-                    if (self.speakingQueue.length > 0) {
-                        message = self.speakingQueue[0];
-                        meSpeak.speak(message, {}, removeFromQueue);
-                    }
-                });
             }
         }
     });
