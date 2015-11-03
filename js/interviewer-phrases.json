@@ -1,0 +1,95 @@
+{
+    "introduction": [
+        {"choose": ["Hi", "Hello", "Greetings"]},
+        ", my name is ",
+        {"choose": ["Bill", "Stephen"]},
+        " ",
+        {"choose": ["Gates", "Hawking"]},
+        ".  ",
+        {"choose": ["It's nice ", "It's a pleasure", "I'm glad", "I'm happy"]},
+        " to meet you."
+    ],
+    "beginCoding": [
+        "Let's get started with some coding questions."
+    ],
+
+    "timeUp": [
+        "I am all out of time.  We'll get back to you in a few days."
+    ],
+    "finishedQuestions": [
+        "That's it for the coding part of the interview.  ",
+        {"choose": [
+            "It's been a pleasure speaking with you.  ",
+            "I'm glad we got the chance to talk.  ",
+            "Thanks for your time.  ",
+            "Thank you for your time.  ",
+            ""
+        ]},
+        {"choose": [
+            "We should get back to you in a few days.  ",
+            ""
+        ]},
+        {"choose": [
+            "I wish you the best of luck",
+            "Good luck"
+        ]},
+        {"choose": ["!", "."]}
+    ],
+
+    "changeLanguage": {
+        "choose": [
+            "What's your favorite part about ${language}?",
+            "Why do you want to use ${language} for this?"
+        ]
+    },
+
+    "conditionalComment": {
+        "choose": [
+            "What is that if statement on line ${line} testing for?",
+            "Can you explain the check you make on line ${line}?"
+        ]
+    },
+    "loopComment": {
+        "choose": [
+            "Can you explain the invariant for the loop on line ${line}?",
+            "What will be the time complexity of the loop on line ${line}?"
+        ]
+    },
+    "variableComment": {
+        "choose": [
+            "What are you using ${variable} for?",
+            "What does ${variable} hold?",
+            "What value will ${variable} have after line ${line}?"
+        ]
+    },
+
+    "failedAllTests": [
+        {"choose": ["Okay.  ", ""]},
+        {"choose" :[
+            "I'm not sure this does quite what you're thinking.",
+            "I don't think this is quite going to work.",
+            "Do you see anything wrong with the code?"
+        ]},
+        "  ",
+        {"choose": [
+            "Try stepping through it.",
+            "Why don't you try walking through an example?",
+            "Try an example input."
+        ]}
+    ],
+    "failedSomeTests": {
+        "choose": [
+            "Are you sure this works correctly in all cases?",
+            "How about making a test case and walking through it?"
+        ]
+    },
+    "failedFewTests":  "I think you may have missed something.  Try walking through the code on this example: ${example}",
+    "passedAllTests": [
+        {"choose": ["Okay.  ", "Sure.  ", "Good.  ", ""]},
+        {"choose": [
+          "That looks fine to me.",
+          "That should work.",
+          "I think this'll work."
+        ]}
+    ]
+}

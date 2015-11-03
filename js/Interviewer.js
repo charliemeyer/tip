@@ -7,6 +7,8 @@ define([
         "util/lodash",
         "js/EventQueue",
         "js/media",
+        "js/Phrase",
+        "dojo/text!js/interviewer-phrases.json",
         "dojo/domReady!"
     ], function (
         declare,
@@ -16,7 +18,9 @@ define([
         on,
         _,
         EventQueue,
-        media
+        media,
+        Phrase,
+        phraseList
     ) {
 
     /**
@@ -85,6 +89,16 @@ define([
              */
             this.speakingQueue = new EventQueue();
 
+            /**
+             *  An object containing phrases the interviewer may say.
+             *  @name  phrases
+             *  @type {Object.<string, Phrase>}
+             *  @memberof Interviewer.prototype
+             */
+            this.phrases = _.mapValues(JSON.parse(phraseList), function (p) {
+                return new Phrase(p);
+            });
+
             var self = this;
             var silentMoments = 0;
             this.waitForUser(5);
@@ -106,10 +120,9 @@ define([
         onLanguageChange: function (language) {
             var self = this;
             setTimeout(function () {
-                self.addMessage(self.makeMessage([
-                    "What's your favorite part about " + language + "?",
-                    "Why do you want to use " + language + " for this?"
-                ]));
+                self.addMessage(self.phrases["changeLanguage"].withContext({
+                    "language": language
+               }));
             }, 500);
         },
 
@@ -124,22 +137,13 @@ define([
          */
         beginInterview: function () {
             var self = this;
-            var intro = this.makeMessage(
-                ["Hi", "Hello"], ", my name is ",
-                ["Bill", "Stephen"], " ",
-                ["Gates", "Hawking"], ".  ",
-                ["It's nice ", "It's a pleasure", "I'm glad", "I'm happy"],
-                " to meet you."
-            );
-            this.addMessage(intro);
+            this.addMessage(this.phrases["introduction"]);
 
-            this.addMessage(this.makeMessage(
-                "Let's get started with some coding questions."
-            ));
+            this.addMessage(this.phrases["beginCoding"]);
 
             this.timer.runTimer(function (endedSoon) {
                 if (!endedSoon) {
-                    self.addMessage("Time is up!  We'll get back to you in a few days.");
+                    self.addMessage(self.phrases["timeUp"]);
                     self.endInterview();
                 }
             });
@@ -157,22 +161,7 @@ define([
             this.timer.stopTimer();
             this.editor.hide();
             this.endscreen.placeAt(dom.byId("main-area")).show();
-            this.addMessage(this.makeMessage(
-                "That's it for the coding part of the interview.  ",
-                [
-                    "It's been a pleasure speaking with you.  ",
-                    "I'm glad we got the chance to talk.  ",
-                    "Thanks for your time.  ",
-                    "Thank you for your time.  ",
-                    ""
-                ], [
-                    "We should get back to you in a few days.  ",
-                    ""
-                ], [
-                    "I wish you the best of luck",
-                    "Good luck"
-                ], ["!", "."]
-            ));
+            this.addMessage(this.phrases["finishedQuestions"]);
             this.canBotherUser = false;
             clearTimeout(this.waitingID);
             document.getElementById('bottombar').style.display = 'none';
@@ -274,6 +263,7 @@ define([
         addMessage: function (message, params) {
             var self = this;
             params = params || {};
+            message = message.toString();
             var whenWritten = params["whenWritten"] || _.noop;
             var whenRead = params["whenRead"] || _.noop;
             var thisArg = params["thisArg"] || this;
@@ -285,40 +275,6 @@ define([
                     nextMessage();
                 });
             });
-        },
-
-
-        /**
-         *  Creates a random message, choosing one element from each of the
-         *  parts passed in.  One string is chosen from each parameter, and
-         *  they are concatenated together, in order.
-         *  @memberOf Interviewer.prototype
-         *  @example
-         *  this.makeMessage(["Hi", "Hello", "Sup"], ", my name is ",
-         *      ["Bill Gates", "Stephen Hawking", "Bill Hawking"]);
-         *  // Possible results are:
-         *  //   "Hi, my name is Bill Gates"
-         *  //   "Sup, my name is Stephen Hawking"
-         *  //   "Hello, my name is Bill Hawking"
-         *  // etc.
-         *  @param  {...string|string[]} messages A list of messages to choose
-         *      between.  Parameters are variadic, ie. you can just list each
-         *      part of the message as a separate parameter.
-         *  @return {string} The message created.
-         *  @todo  This could recursively resolve things in a Markov-chain sort
-         *      of way, ie. allow arrays within arrays for choices within
-         *      choices.
-         */
-        makeMessage: function () {
-            var message = "";
-            _.each(arguments, function (messages) {
-                if (!_.isArray(messages)) {
-                    message += messages;
-                } else {
-                    message += _.sample(messages);
-                }
-            });
-            return message;
         },
 
         /**
@@ -353,22 +309,20 @@ define([
             var variables = /(\w*)\s*=/.exec(line);
             if (_.contains(line, "if")) {
                 this.explainedLines.push(number);
-                return this.makeMessage([
-                    "What is that if statement on line " + number + " testing for?",
-                    "Can you explain the check you make on line " + number + "?"
-                ]);
+                return this.phrases["conditionalComment"].withContext({
+                    "line": line
+                });
             } else if (_.contains(line, "while") || _.contains(line, "for")) {
                 this.explainedLines.push(number);
-                return this.makeMessage([
-                    "Can you explain the invariant for the loop on line " + number + "?",
-                    "What will be the time complexity of the loop on line " + number + "?"
-                ]);
+                return this.phrases["loopComment"].withContext({
+                    "line": line
+                });
             } else if (variables.length > 1) {
-                return this.makeMessage([
-                        "What are you using " + variables[1] + " for?",
-                        "What does " + variables[1] + " hold?",
-                        "What value will " + variables[1] + " have after line " + number + "?"
-                ]);
+                this.explainedLines.push(number);
+                return this.phrases["variableComment"].withContext({
+                    "line": line,
+                    "variable": variables[1]
+                });
             } else {
                 return false;
             }
@@ -393,36 +347,16 @@ define([
 
             if (numFailures > 0) {
                 if (numSuccesses === 0) {
-                    this.addMessage(this.makeMessage(
-                        ["Okay.  ", ""],
-                        [
-                          "I'm not sure this does quite what you're thinking.",
-                          "I don't think this is quite going to work.",
-                          "Do you see anything wrong with the code?"
-                        ], "  ",
-                        [
-                          "Try stepping through it.",
-                          "Why don't you try walking through an example?",
-                          "Try an example input."
-                        ]
-                    ));
+                    this.addMessage(this.phrases["failedAllTests"]);
                 } else if (numSuccesses < numFailures) {
-                    this.addMessage(this.makeMessage([
-                        "Are you sure this works correctly in all cases?",
-                        "How about making a test case and walking through it?"
-                    ]));
+                    this.addMessage(this.phrases["failedSomeTests"]);
                 } else {
-                    this.addMessage("I think you may have missed something.  Try walking through the code on this example: " + _.sample(failedCases));
+                    this.addMessage(this.phrases["failedFewTests"].withContext({
+                        "example": {"choose": failedCases}
+                    }));
                 }
             } else {
-                this.addMessage(this.makeMessage(
-                    ["Okay.  ", "Sure.  ", "Good.  ", ""],
-                    [
-                      "That looks fine to me.",
-                      "That should work.",
-                      "I think this'll work."
-                    ]
-                ));
+                this.addMessage(this.phrases["passedAllTests"]);
                 setTimeout(function () {
                     self.getNextQuestionOr(function () {
                         self.endInterview();

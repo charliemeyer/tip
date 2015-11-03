@@ -55,9 +55,8 @@ define([
         },
 
         /**
-         *  Determines if there is nothing remaining on the queue.
          *  @memberOf EventQueue.prototype
-         *  @return {Boolean}
+         *  @return {Boolean} Whether nothing remains on the queue.
          */
         isEmpty: function () {
             return this._queue.length === 0;

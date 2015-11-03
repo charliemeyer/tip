@@ -27,8 +27,7 @@ define([
 
     /**
      *  A ChatBox class keeps a list of messages that scroll up from the
-     *  bottom.  Messages fade out after some time.  Messages are read
-     *  aloud when they are added to the chat.
+     *  bottom.  Messages fade out after some time.
      *  @class
      *  @name  ChatBox
      *  @extends {dijit._WidgetBase}
