@@ -104,6 +104,12 @@ define([
      *      new Phrase("${a}").withContext({"a": "${a}"}).toString();
      *                      // --> Stack overflow / out of memory
      */
+    /**
+     *  An object representing the context of a phrase.  Binds names to
+     *  Phrase values or functions that produce Phrase values.
+     *  @typedef {Object.<string, (Phrase|function(string):Phrase)>}
+     *      Phrase~Context
+     */
     var Phrase = declare(null, {
 
         /**
@@ -124,11 +130,10 @@ define([
          *      modify the representation of the Phrase object as well.<br />
          *      Sequences of the form ${name} within a phrase will be
          *      substituted with a value based on the phrase's context.
-         *  @param {Object} [context] The context in which to bind the phrase.
-         *      Context is an object with key-value pairs, where substrings of
-         *      the form ${key} are replaced with the value context[key].
-         *      The value of context[key] should be either a phrase, or a
-         *      function that returns a phrase.
+         *  @param {Phrase~Context} [context] The context in which to bind the
+         *      phrase.  Context is an object with key-value pairs, where
+         *      substrings of the form ${key} in the phrase are replaced with
+         *      the value (or the result of running) context[key].
          *  @memberOf Phrase.prototype
          */
         constructor: function (phrase, context) {
@@ -159,7 +164,7 @@ define([
          *  Creates a new Phrase object with the same phrase structure, but
          *  bound to this new context instead.
          *  @memberOf Phrase.prototype
-         *  @param  {Object} context The context for the new phrase.
+         *  @param  {Phrase~Context} context The context for the new phrase.
          *  @return {Phrase}
          */
         withContext: function (context) {
@@ -172,7 +177,7 @@ define([
          *  any properties of the old context that were not overridden by
          *  newContext.
          *  @memberOf Phrase.prototype
-         *  @param  {Object} newContext
+         *  @param  {Phrase~Context} newContext
          *  @return {Phrase} Returns the Phrase for easy chaining.
          */
         extendContext: function (newContext) {
@@ -183,7 +188,7 @@ define([
         /**
          *  Modifies the context of this Phrase object.
          *  @memberOf Phrase.prototype
-         *  @param  {Object} newContext
+         *  @param  {Phrase~Context} newContext
          *  @return {Phrase} Returns the Phrase for easy chaining.
          */
         changeContext: function (newContext) {

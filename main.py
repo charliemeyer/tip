@@ -37,10 +37,10 @@ BinarySearch = Question(
              '''Given an array of sorted integers, return True if x is in the array,
 and the string False otherwise. Example: [[1,2,6,8,10], 9] -> False''',
             [[[[], 0],False],
-             [[1], 1],True],
-             [[1, 2, 3, 4], 3],True],
-             [[1, 2, 6, 7, 8], 5],False],
-             [[-3, -2], -2],True]
+             [[[1], 1],True],
+             [[[1, 2, 3, 4], 3],True],
+             [[[1, 2, 6, 7, 8], 5],False],
+             [[[-3, -2], -2],True]
              ])
 ArraySum = Question(
              '''find_dupe''',

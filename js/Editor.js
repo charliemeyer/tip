@@ -138,7 +138,10 @@ define([
                 }))
             };
             var self = this;
-            request.post(base_url, {data: params}).then(function(data){
+            request.post(base_url, {
+                data: params,
+                handleAs: "json"
+            }).then(function(data){
                 self.evaluateAnswer(data);
             }, function (error) {
                 console.log("OH NO COULDN'T POST TO THE SERVER");

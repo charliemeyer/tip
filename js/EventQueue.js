@@ -16,6 +16,12 @@ define([
      *  @name  EventQueue
      *  @extends {dojo.Evented}
      */
+    /**
+     *  @callback EventQueue~EventResponder
+     *  @param {function()} finished A function for the event responder to
+     *      call when it is done responding to the event, allowing events
+     *      behind it to proceed.
+     */
     var EventQueue = declare([Evented], {
         /**
          *  @constructor
@@ -33,10 +39,8 @@ define([
          *  Add a function to the queue.  This function must signal when it
          *  is done, or else no other events will be removed from the queue.
          *  @memberOf EventQueue.prototype
-         *  @param  {function} event The event to add.  It will be passed a
-         *      single parameter, which is a function to call when the event
-         *      is done, ie. when the next event from the queue can be
-         *      processed.
+         *  @param  {EventQueue~EventResponder} event The event to add, which
+         *      will be called when all events before it have been processed.
          */
         enqueue: function (event) {
             var self = this;

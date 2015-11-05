@@ -69,7 +69,7 @@ define([
             /**
              *  The current question being asked of the user.
              *  @name  currentQuestion
-             *  @type {Object|null}
+             *  @type {?Object}
              *  @memberof Interviewer.prototype
              */
             this.currentQuestion = null;
@@ -141,12 +141,14 @@ define([
 
             this.addMessage(this.phrases["beginCoding"]);
 
-            this.timer.runTimer(function (endedSoon) {
-                if (!endedSoon) {
-                    self.addMessage(self.phrases["timeUp"]);
-                    self.endInterview();
-                }
+            this.timer.on("end", function () {
+                self.addMessage(self.phrases["timeUp"]);
+                self.endInterview();
             });
+            this.timer.on("pause", function () {
+                self.endInterview();
+            });
+            this.timer.runTimer();
         },
 
         /**
@@ -158,13 +160,10 @@ define([
          */
         endInterview: function () {
             // Hide editor div, fill it with a results div
-            this.timer.stopTimer();
             this.editor.hide();
             this.endscreen.placeAt(dom.byId("main-area")).show();
-            this.addMessage(this.phrases["finishedQuestions"]);
             this.canBotherUser = false;
             clearTimeout(this.waitingID);
-            document.getElementById('bottombar').style.display = 'none';
             this.questionPrompt.set("content", "Done with interview!");
         },
 
@@ -238,7 +237,7 @@ define([
                         this.questionPrompt.set("content", "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question);
                     },
                     thisArg: this
-                }, this);
+                });
             } else {
                 callback.call(this);
             }
@@ -249,7 +248,8 @@ define([
          *  Puts the message on a queue of messages to give to the user.
          *  Messages are given only after previous messages have been given.
          *  @memberof Interviewer.prototype
-         *  @param {string} message The message to present.
+         *  @param {*} message The message to present.  Can be anything with
+         *      a toString() method.
          *  @param {Object} [params]
          *  @param {function} [params.whenWritten] A callback called when the
          *      message is written to chat.
@@ -257,8 +257,6 @@ define([
          *      message is done being read to the user.
          *  @param {Object} [params.thisArg] The "this" argument to apply to
          *      the callbacks.
-         *  @param {Object} [thisArg] An optional argument to bind to whenRead
-         *      as its value of this.
          */
         addMessage: function (message, params) {
             var self = this;
@@ -285,7 +283,7 @@ define([
         generateComment: function () {
             var row = this.editor.getCursorPosition().row - 1;
             var lines = this.editor.getValue().split("\n");
-            var comment = false;
+            var comment = null;
             while (row >= 0 && !comment) {
                 comment = this.getCommentFrom(lines[row], row + 1);
                 --row;
@@ -301,8 +299,8 @@ define([
          *  @memberof Interviewer.prototype
          *  @param  {string} line The line to inspect.
          *  @param  {number} number The number to identify the line by.
-         *  @return {string|false} Returns false if no comment can be made.
-         *      Otherwise, the comment is returned.
+         *  @return {?Phrase} Returns null if no comment can be made.
+         *      Otherwise, the comment is returned as a Phrase.
          */
         getCommentFrom: function (line, number) {
             if (_.contains(this.explainedLines, number)) return;
@@ -332,12 +330,17 @@ define([
          *  Evaluates the user's code.  Gives feedback, and moves on to the
          *  next question if the answer was correct.
          *  @memberof Interviewer.prototype
+         *  @todo  data.result will have a compilemessage property, which you
+         *      can check for syntax errors.
+         *  @todo  figure out how to make general boiler plate for functions
+         *      with an arbitrary number of parameters
          */
         evaluateAnswer: function (data) {
             function removeWhiteSpace(str) {
                 return str;//str.replace(/ /g,'');
             }
             var self = this;
+            console.log(data);
             data = data.result;
             var failedCases = _.filter(this.currentQuestion.testcases, function (test, testnum) {
                 return (removeWhiteSpace(data.stdout[testnum]) !== removeWhiteSpace(test[1]));
@@ -359,6 +362,8 @@ define([
                 this.addMessage(this.phrases["passedAllTests"]);
                 setTimeout(function () {
                     self.getNextQuestionOr(function () {
+                        self.timer.stopTimer();
+                        self.addMessage(this.phrases["finishedQuestions"]);
                         self.endInterview();
                     });
                 }, 3000)

@@ -54,20 +54,29 @@ define([
         },
 
         /**
+         *  A function to call when the timer has stopped.
+         *  @callback Timer~StopResponder
+         *  @param {boolean} paused True if the callback is being called
+         *      because the timer was paused; false if it's being called
+         *      because the timer has run out of time.
+         */
+        /**
          *  Starts running the timer.
          *  @memberof Timer.prototype
-         *  @param  {function} callback Will be called when the timer stops
-         *      running.  Will be passed a boolean: true if the timer was
-         *      simply paused, false if it ran out of time.
+         *  @param  {Timer~StopResponder} callback Will be called when the
+         *      timer stops running.
+         *  @todo  emit an event instead of taking a callback
          */
         runTimer: function(callback) {
             var self = this;
+            this.emit("start");
             setTimeout(function decrement() {
                 self.seconds -= 1;
                 if (!self.paused && self.seconds >= 0) {
                     setTimeout(decrement, 1000);
                 } else {
-                    callback(self.paused);
+                    self.emit(self.paused ? "pause" : "end");
+                    //callback(self.paused);
                     return;
                 }
                 self.renderTime();
