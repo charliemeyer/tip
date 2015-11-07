@@ -1,0 +1,57 @@
+{
+    "components": {
+        "interfaceManager": {
+            "create": "js/interfaceManager",
+            "connect": {
+                "_chatBox": "chatBox",
+                "_timer"  : "timer",
+                "_editor" : "editor",
+                "_endscreen": "endscreen",
+                "_prompt" : "questionPrompt"
+            }
+        },
+        "interviewer": {
+            "create": "js/Interviewer",
+            "connect": {
+                "_textBox": "chatBox",
+                "_timer"  : "timer",
+                "_editor" : "editor",
+                "_endscreen": "endscreen",
+                "_questionPrompt" : "questionPrompt"
+            }
+        },
+        "chatBox": {
+            "create": "js/ChatBox",
+            "params": {
+                "defaultTimeOut": 300000
+            }
+        },
+        "timer": {
+            "create": "js/Timer",
+            "params": {
+                "minutes": 15
+            }
+        },
+        "editor": {
+            "create": "js/Editor"
+        },
+        "questionPrompt": {
+            "create": "js/InfoBar"
+        },
+        "endscreen": {
+            "create": "js/Endscreen",
+            "connect": {
+                "_timer": "timer",
+                "_editor": "editor"
+            }
+        }
+    },
+    "events": {
+        "interviewStart": ["interfaceManager.onInterviewStart"],
+        "languageChanged": ["interviewer.onLanguageChange"]
+    },
+    "services": {
+        "currentQuestion": "interviewer.getQuestion",
+        "evaluateAnswer" : "interviewer.evaluateAnswer"
+    }
+}

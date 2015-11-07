@@ -63,23 +63,10 @@
          *  @function
          *  @memberof Interviewer.prototype
          *  @param  {Object} args
-         *  @param {TextBox} args.textBox The text box for the interviewer
-         *      to use for communication with the user.
-         *  @param {Timer} args.timer The timer for the interviewer to use.
-         *  @param {Editor} args.editor The editor for the interviewer to
-         *      look at.
-         *  @param {Endscreen} args.endscreen The screen to transition to when
-         *      the interview is over.
          *  @todo  Instead of having these stored in the interviewer, keep them
          *      as separate components that can interact.
          */
         constructor: function (args) {
-            this.textBox = args.textBox;
-            this.timer = args.timer;
-            this.editor = args.editor;
-            this.endscreen = args.endscreen;
-            this.questionPrompt = args.questionPrompt;
-            this.endscreen.editor = this.editor;
             /**
              *  A list of questions for the interviewer to ask.
              *  @name  questions
@@ -144,6 +131,12 @@
             this.loadQuestions();
         },
 
+        events: function () {
+            return [
+                ["signalStart", "interviewStart"]
+            ];
+        },
+
         // For now.
         onLanguageChange: function (language) {
             var self = this;
@@ -165,15 +158,20 @@
          */
         beginInterview: function () {
             var self = this;
-            this.addMessage(this.phrases["introduction"]);
+            this.signalStart();
 
-            this.addMessage(this.phrases["beginCoding"]);
+            setTimeout(function () {
+                self.addMessage(self.phrases["introduction"]);
+                self.addMessage(self.phrases["beginCoding"]);
+                self._timer.runTimer();
+            }, 1000);
 
-            this.timer.runTimer(function (endedSoon) {
-                if (!endedSoon) {
-                    self.addMessage(self.phrases["timeUp"]);
-                    self.endInterview();
-                }
+            this._timer.on("end", function () {
+                self.addMessage(self.phrases["timeUp"]);
+                self.endInterview();
+            });
+            this._timer.on("pause", function () {
+                self.endInterview();
             });
         },
 
@@ -185,15 +183,12 @@
          *      respond to.
          */
         endInterview: function () {
-            // Hide editor div, fill it with a results div
-            this.timer.stopTimer();
-            this.editor.hide();
-            this.endscreen.placeAt(dom.byId("main-area")).show();
-            this.addMessage(this.phrases["finishedQuestions"]);
+            // Hide _editor div, fill it with a results div
+            this._editor.hide();
+            this._endscreen.placeAt(dom.byId("main-area")).show();
             this.canBotherUser = false;
             clearTimeout(this.waitingID);
-            document.getElementById('bottombar').style.display = 'none';
-            this.questionPrompt.set("content", "Done with interview!");
+            this._questionPrompt.set("content", "Done with interview!");
         },
 
         /**
@@ -209,7 +204,7 @@
             request.get("/questions.json").then(function (response) {
                 self.questions = JSON.parse(response);
                 setTimeout(function () {
-                    self.getNextQuestion();
+                    self.getNextQuestion(); // DO ON AN EVENT INSTEAD
                 }, 3000);
             }, function (error) {
                 self.questions = [{
@@ -258,12 +253,12 @@
          */
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion &lt; this.questions.length) {
-                this.editor.editor.setValue('');
+                this._editor.editor.setValue('');
                 this.currentQuestion = this.questions[this.nextQuestion++];
                 var message = this.currentQuestion.desc;
                 this.addMessage(this.currentQuestion.desc, {
                     whenWritten: function () {
-                        this.questionPrompt.set("content", "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question);
+                        this._questionPrompt.set("content", "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question);
                     },
                     thisArg: this
                 });
@@ -295,7 +290,7 @@
             var whenRead = params["whenRead"] || _.noop;
             var thisArg = params["thisArg"] || this;
             this.speakingQueue.enqueue(function (nextMessage) {
-                self.textBox.addMessage(message);
+                self._textBox.addMessage(message);
                 whenWritten.call(thisArg);
                 meSpeak.speak(message, {}, function () {
                     whenRead.call(thisArg);
@@ -310,8 +305,8 @@
          *  @memberof Interviewer.prototype
          */
         generateComment: function () {
-            var row = this.editor.getCursorPosition().row - 1;
-            var lines = this.editor.getValue().split("\n");
+            var row = this._editor.getCursorPosition().row - 1;
+            var lines = this._editor.getValue().split("\n");
             var comment = null;
             while (row >= 0 &amp;&amp; !comment) {
                 comment = this.getCommentFrom(lines[row], row + 1);
@@ -359,6 +354,10 @@
          *  Evaluates the user's code.  Gives feedback, and moves on to the
          *  next question if the answer was correct.
          *  @memberof Interviewer.prototype
+         *  @todo  data.result will have a compilemessage property, which you
+         *      can check for syntax errors.
+         *  @todo  figure out how to make general boiler plate for functions
+         *      with an arbitrary number of parameters
          */
         evaluateAnswer: function (data) {
             function removeWhiteSpace(str) {
@@ -366,7 +365,6 @@
             }
             var self = this;
             data = data.result;
-            console.log(data);
             var failedCases = _.filter(this.currentQuestion.testcases, function (test, testnum) {
                 return (removeWhiteSpace(data.stdout[testnum]) !== removeWhiteSpace(test[1]));
             }, this);
@@ -387,6 +385,8 @@
                 this.addMessage(this.phrases["passedAllTests"]);
                 setTimeout(function () {
                     self.getNextQuestionOr(function () {
+                        self._timer.stopTimer();
+                        self.addMessage(this.phrases["finishedQuestions"]);
                         self.endInterview();
                     });
                 }, 3000)
@@ -405,13 +405,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ChatBox.html">ChatBox</a></li><li><a href="Editor.html">Editor</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="EventQueue.html">EventQueue</a></li><li><a href="InfoBar.html">InfoBar</a></li><li><a href="Interviewer.html">Interviewer</a></li><li><a href="Phrase.html">Phrase</a></li><li><a href="Timer.html">Timer</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="App.html">App</a></li><li><a href="ChatBox.html">ChatBox</a></li><li><a href="Editor.html">Editor</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="EventQueue.html">EventQueue</a></li><li><a href="InfoBar.html">InfoBar</a></li><li><a href="InterfaceManager.html">InterfaceManager</a></li><li><a href="Interviewer.html">Interviewer</a></li><li><a href="Phrase.html">Phrase</a></li><li><a href="Timer.html">Timer</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Wed Nov 04 2015 09:45:47 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sat Nov 07 2015 13:40:31 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

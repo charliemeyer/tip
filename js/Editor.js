@@ -75,6 +75,19 @@ define([
             // this.$blockScrolling = Infinity;
         },
 
+        services: function () {
+            return [
+                {name: "getQuestion", source: "currentQuestion"},
+                {name: "evaluateAnswer", source: "evaluateAnswer"}
+            ];
+        },
+
+        events: function () {
+            return [
+                {name: "sendLanguageChange", source: "languageChanged"}
+            ];
+        },
+
         postCreate: function () {
             this.inherited(arguments)
             var self = this;

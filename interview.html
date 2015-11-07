@@ -18,28 +18,12 @@
         };
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
     <script type="text/javascript">
-        // This parses the HTML interface and fades out the loading screen.
-        require(["dojo/parser", "dojo/promise/all", "dojo/_base/fx", "dojo/dom-style", "dojo/dom", "dijit/layout/ContentPane", "dijit/layout/BorderContainer", "dojo/domReady!"],
-            function (parser, all, fx, domStyle, dom) {
+        // Parse the HTML and start up the application.
+        require(["dojo/parser", "dojo/promise/all", "dojo/io-query", "js/App", "dojo/text!js/app.json", "dijit/layout/ContentPane", "dijit/layout/BorderContainer", "dojo/domReady!"],
+            function (parser, all, ioQuery, App, config) {
 
-            all([parser.parse()]).then(function (_results) {
-                setTimeout(function () {
-                    fx.fadeOut({
-                        node: dom.byId("loadingOverlay"),
-                        duration: 1000,
-                        onEnd: function(node){
-                            domStyle.set(node, 'display', 'none');
-                        }
-                    }).play();
-                }, 500);
-            });
-        });
-        // Starts the app
-        require(["js/Interviewer", "js/ChatBox", "js/Timer", "js/Editor", "js/Endscreen", "js/InfoBar", "dojo/dom", "dojo/io-query", "dojo/domReady!"],
-            function (Interviewer, ChatBox, Timer, Editor, Endscreen, InfoBar, dom, ioQuery) {
             require(["js/media"], function (media) {
                 media.load();
             });
@@ -47,42 +31,16 @@
             var queryString = document.location.search.substr(document.location.search[0] === "?" ? 1 : 0);
             var urlParams = ioQuery.queryToObject(queryString);
 
-            var editor = new Editor().placeAt(dom.byId("main-area"));
+            config = JSON.parse(config);
+            // TODO: Call a function instead to set timer's value
+            config.components.timer.params.minutes = urlParams["duration"];
 
-            var questionPrompt = new InfoBar().placeAt(dom.byId("question-prompt"));
+            var app = new App(config);
 
-            var chat = new ChatBox({
-                defaultTimeOut: 60 * 5000
-            }).placeAt(dom.byId("chat-area"));
-
-            var timer = new Timer({
-                minutes: urlParams["duration"]
-            }).placeAt(dom.byId("time-area"));
-
-            var endscreen = new Endscreen();
-
-            var interviewer = new Interviewer({
-                textBox: chat,
-                timer: timer,
-                editor: editor,
-                endscreen: endscreen,
-                questionPrompt: questionPrompt
+            all([parser.parse(), app.start()]).then(function (_results) {
+                app.getComponent("interfaceManager").build();
+                app.getComponent("interviewer").beginInterview();
             });
-
-            // These connections should be done by some kind of manager class
-            editor.evaluateAnswer = function () {
-                interviewer.evaluateAnswer.apply(interviewer, arguments)
-            };
-
-            editor.getQuestion = function () {
-                return interviewer.getQuestion.call(interviewer);
-            };
-
-            editor.sendLanguageChange = function (lang) {
-                interviewer.onLanguageChange(lang);
-            }
-
-            interviewer.beginInterview();
         });
     </script>
 </head>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Endscreen.js</title>
+    <title>JSDoc: Source: InterfaceManager.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Endscreen.js</h1>
+    <h1 class="page-title">Source: InterfaceManager.js</h1>
 
     
 
@@ -28,78 +28,59 @@
         <article>
             <pre class="prettyprint source linenums"><code>define([
         "dojo/_base/declare",
-        "dojo/_base/lang",
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
-        "dijit/_OnDijitClickMixin",
-        "dojo/text!js/templates/endscreen.html",
-        "dojo/dom",
+        "dojo/text!js/templates/timer.html",
+        "dojo/_base/fx",
         "dojo/dom-style",
-        "dojo/on",
-        "util/lodash"
+        "dojo/dom",
+        "dojo/dom-construct"
     ], function (
         declare,
-        lang,
         _WidgetBase,
         _TemplatedMixin,
-        _ClickMixin,
-        endscreenTemplateString,
-        dom,
+        timerTemplateString,
+        fx,
         domStyle,
-        on,
-        _
+        dom,
+        domConstruct
     ) {
 
+
     /**
-     *  An Endscreen displays details about how the interview went, and
-     *  provides an opportunity to replay it.
      *  @class
-     *  @name  Endscreen
-     *  @extends {dijit._WidgetBase}
+     *  @name  InterfaceManager
+     *  @extends dijit._WidgetBase
      */
-    var Endscreen = declare([_WidgetBase, _TemplatedMixin, _ClickMixin], {
-        templateString: endscreenTemplateString,
+    var InterfaceManager = declare(null, {
 
         /**
-         *  A reference to the editor that logged the user's info.
-         *  It must be set before the endscreen can replay anything.
-         *  @name  editor
-         *  @memberOf Endscreen.prototype
-         *  @type {Editor}
+         *
+         *  @memberof InterfaceManager.prototype
          */
+        build: function () {
+            this._editor.placeAt(dom.byId("main-area"));
+            this._prompt.placeAt(dom.byId("question-prompt"));
+            this._chatBox.placeAt(dom.byId("chat-area"));
+            this._timer.placeAt(dom.byId("time-area"));
 
-        /**
-         *  Replays the user's interview typing.
-         *  @memberOf Endscreen.prototype
-         *  @todo  THIS is surely where the media should get played, not
-         *      the editor.
-         */
-        replay: function () {
-            this.hide();
-            this.editor.show();
-            this.editor.playback();
         },
 
-        /**
-         *  Displays or un-hides the endscreen for the user.
-         *  @memberof Endscreen.prototype
-         */
-        show: function () {
-            domStyle.set(this.domNode, "display", "block");
-        },
-
-        /**
-         *  Hides the endscreen from the user.
-         *  @memberof Endscreen.prototype
-         */
-        hide: function () {
-            domStyle.set(this.domNode, "display", "none");
+        onInterviewStart: function () {
+            setTimeout(function () {
+                fx.fadeOut({
+                    node: dom.byId("loadingOverlay"),
+                    duration: 1000,
+                    onEnd: function(node){
+                        domStyle.set(node, 'display', 'none');
+                    }
+                }).play();
+            }, 100);
         }
     });
 
-    return Endscreen;
+    return InterfaceManager;
 });
-
 </code></pre>
         </article>
     </section>

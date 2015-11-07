@@ -35,23 +35,10 @@ define([
          *  @function
          *  @memberof Interviewer.prototype
          *  @param  {Object} args
-         *  @param {TextBox} args.textBox The text box for the interviewer
-         *      to use for communication with the user.
-         *  @param {Timer} args.timer The timer for the interviewer to use.
-         *  @param {Editor} args.editor The editor for the interviewer to
-         *      look at.
-         *  @param {Endscreen} args.endscreen The screen to transition to when
-         *      the interview is over.
          *  @todo  Instead of having these stored in the interviewer, keep them
          *      as separate components that can interact.
          */
         constructor: function (args) {
-            this.textBox = args.textBox;
-            this.timer = args.timer;
-            this.editor = args.editor;
-            this.endscreen = args.endscreen;
-            this.questionPrompt = args.questionPrompt;
-            this.endscreen.editor = this.editor;
             /**
              *  A list of questions for the interviewer to ask.
              *  @name  questions
@@ -116,6 +103,12 @@ define([
             this.loadQuestions();
         },
 
+        events: function () {
+            return [
+                ["signalStart", "interviewStart"]
+            ];
+        },
+
         // For now.
         onLanguageChange: function (language) {
             var self = this;
@@ -137,18 +130,21 @@ define([
          */
         beginInterview: function () {
             var self = this;
-            this.addMessage(this.phrases["introduction"]);
+            this.signalStart();
 
-            this.addMessage(this.phrases["beginCoding"]);
+            setTimeout(function () {
+                self.addMessage(self.phrases["introduction"]);
+                self.addMessage(self.phrases["beginCoding"]);
+                self._timer.runTimer();
+            }, 1000);
 
-            this.timer.on("end", function () {
+            this._timer.on("end", function () {
                 self.addMessage(self.phrases["timeUp"]);
                 self.endInterview();
             });
-            this.timer.on("pause", function () {
+            this._timer.on("pause", function () {
                 self.endInterview();
             });
-            this.timer.runTimer();
         },
 
         /**
@@ -159,12 +155,12 @@ define([
          *      respond to.
          */
         endInterview: function () {
-            // Hide editor div, fill it with a results div
-            this.editor.hide();
-            this.endscreen.placeAt(dom.byId("main-area")).show();
+            // Hide _editor div, fill it with a results div
+            this._editor.hide();
+            this._endscreen.placeAt(dom.byId("main-area")).show();
             this.canBotherUser = false;
             clearTimeout(this.waitingID);
-            this.questionPrompt.set("content", "Done with interview!");
+            this._questionPrompt.set("content", "Done with interview!");
         },
 
         /**
@@ -180,7 +176,7 @@ define([
             request.get("/questions.json").then(function (response) {
                 self.questions = JSON.parse(response);
                 setTimeout(function () {
-                    self.getNextQuestion();
+                    self.getNextQuestion(); // DO ON AN EVENT INSTEAD
                 }, 3000);
             }, function (error) {
                 self.questions = [{
@@ -229,12 +225,12 @@ define([
          */
         getNextQuestionOr: function (callback) {
             if (this.nextQuestion < this.questions.length) {
-                this.editor.editor.setValue('');
+                this._editor.editor.setValue('');
                 this.currentQuestion = this.questions[this.nextQuestion++];
                 var message = this.currentQuestion.desc;
                 this.addMessage(this.currentQuestion.desc, {
                     whenWritten: function () {
-                        this.questionPrompt.set("content", "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question);
+                        this._questionPrompt.set("content", "Define the function " + this.currentQuestion.function_name + " - " + this.currentQuestion.question);
                     },
                     thisArg: this
                 });
@@ -266,7 +262,7 @@ define([
             var whenRead = params["whenRead"] || _.noop;
             var thisArg = params["thisArg"] || this;
             this.speakingQueue.enqueue(function (nextMessage) {
-                self.textBox.addMessage(message);
+                self._textBox.addMessage(message);
                 whenWritten.call(thisArg);
                 meSpeak.speak(message, {}, function () {
                     whenRead.call(thisArg);
@@ -281,8 +277,8 @@ define([
          *  @memberof Interviewer.prototype
          */
         generateComment: function () {
-            var row = this.editor.getCursorPosition().row - 1;
-            var lines = this.editor.getValue().split("\n");
+            var row = this._editor.getCursorPosition().row - 1;
+            var lines = this._editor.getValue().split("\n");
             var comment = null;
             while (row >= 0 && !comment) {
                 comment = this.getCommentFrom(lines[row], row + 1);
@@ -340,7 +336,6 @@ define([
                 return str;//str.replace(/ /g,'');
             }
             var self = this;
-            console.log(data);
             data = data.result;
             var failedCases = _.filter(this.currentQuestion.testcases, function (test, testnum) {
                 return (removeWhiteSpace(data.stdout[testnum]) !== removeWhiteSpace(test[1]));
@@ -362,7 +357,7 @@ define([
                 this.addMessage(this.phrases["passedAllTests"]);
                 setTimeout(function () {
                     self.getNextQuestionOr(function () {
-                        self.timer.stopTimer();
+                        self._timer.stopTimer();
                         self.addMessage(this.phrases["finishedQuestions"]);
                         self.endInterview();
                     });
