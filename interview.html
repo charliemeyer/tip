@@ -21,25 +21,21 @@
     <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
     <script type="text/javascript">
         // Parse the HTML and start up the application.
-        require(["dojo/parser", "dojo/promise/all", "dojo/io-query", "js/App", "dojo/text!js/app.json", "dijit/layout/ContentPane", "dijit/layout/BorderContainer", "dojo/domReady!"],
-            function (parser, all, ioQuery, App, config) {
+        require(["dojo/parser", "dojo/promise/all", "js/App", "dojo/text!js/app.json", "dijit/layout/ContentPane", "dijit/layout/BorderContainer", "dojo/domReady!"],
+            function (parser, all, App, config) {
 
             require(["js/media"], function (media) {
                 media.load();
             });
 
-            var queryString = document.location.search.substr(document.location.search[0] === "?" ? 1 : 0);
-            var urlParams = ioQuery.queryToObject(queryString);
-
             config = JSON.parse(config);
-            // TODO: Call a function instead to set timer's value
-            config.components.timer.params.minutes = urlParams["duration"];
-
             var app = new App(config);
 
             all([parser.parse(), app.start()]).then(function (_results) {
                 app.getComponent("interfaceManager").build();
                 app.getComponent("interviewer").beginInterview();
+            }, function (err) {
+                console.error("ERROR STARTING APP", err);
             });
         });
     </script>

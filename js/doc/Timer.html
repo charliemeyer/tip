@@ -145,154 +145,6 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="paused"><span class="type-signature"></span>paused<span class="type-signature"> :boolean</span></h4>
-
-
-
-
-<div class="description">
-    Whether the timer is paused or running.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">boolean</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line40">line 40</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="seconds"><span class="type-signature"></span>seconds<span class="type-signature"> :number</span></h4>
-
-
-
-
-<div class="description">
-    The number of seconds left on the timer.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line47">line 47</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -302,7 +154,7 @@
 
     
 
-    <h4 class="name" id="constructor"><span class="type-signature"></span>constructor<span class="signature">(args)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="constructor"><span class="type-signature"></span>constructor<span class="signature">(args<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -329,6 +181,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -354,6 +208,16 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -371,7 +235,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -396,11 +264,113 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last">The number of minutes the timer should
      start at.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lowerBound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last">The lower bound of the timer.
+     If the timer is counting down, this is where it will stop.
+     Set to a non-finite value for no lower bound.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>upperBound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last">The upper bound of the timer.
+     If the timer is counting up, this is where it will stop.
+     Set to a non-finite value for no upper bound.</td>
         </tr>
 
     
@@ -448,7 +418,171 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line38">line 38</a>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="countDown"><span class="type-signature"></span>countDown<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Runs the timer as a countdown.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line141">line 141</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="countUp"><span class="type-signature"></span>countUp<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Runs the timer, counting up.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line150">line 150</a>
     </li></ul></dd>
     
 
@@ -531,7 +665,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line87">line 87</a>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line168">line 168</a>
     </li></ul></dd>
     
 
@@ -613,7 +747,141 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line60">line 60</a>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line116">line 116</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setTime"><span class="type-signature"></span>setTime<span class="signature">(newTime)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Sets the time currently showing on the timer.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>newTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line85">line 85</a>
     </li></ul></dd>
     
 
@@ -695,7 +963,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line78">line 78</a>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line159">line 159</a>
     </li></ul></dd>
     
 
@@ -727,6 +995,258 @@
     
 
     
+        <h3 class="subsection-title">Events</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="~event:end">end</h4>
+
+    
+
+
+
+<div class="description">
+    Fires when the timer stops because it has hit an upper or
+ lower bound.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line107">line 107</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~event:pause">pause</h4>
+
+    
+
+
+
+<div class="description">
+    Fires when the timer is paused, ie. it has stopped running but
+ not yet hit its upper or lower bound.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line102">line 102</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~event:start">start</h4>
+
+    
+
+
+
+<div class="description">
+    Fired when the timer starts running.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Timer.js.html">Timer.js</a>, <a href="Timer.js.html#line98">line 98</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
 </article>
 
 </section>
@@ -737,13 +1257,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="App.html">App</a></li><li><a href="ChatBox.html">ChatBox</a></li><li><a href="Editor.html">Editor</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="EventQueue.html">EventQueue</a></li><li><a href="InfoBar.html">InfoBar</a></li><li><a href="InterfaceManager.html">InterfaceManager</a></li><li><a href="Interviewer.html">Interviewer</a></li><li><a href="Phrase.html">Phrase</a></li><li><a href="Timer.html">Timer</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="App.html">App</a></li><li><a href="ChatBox.html">ChatBox</a></li><li><a href="Editor.html">Editor</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="EventQueue.html">EventQueue</a></li><li><a href="InfoBar.html">InfoBar</a></li><li><a href="InterfaceManager.html">InterfaceManager</a></li><li><a href="Interviewer.html">Interviewer</a></li><li><a href="Phrase.html">Phrase</a></li><li><a href="Timer.html">Timer</a></li></ul><h3>Events</h3><ul><li><a href="Timer.html#~event:end">end</a></li><li><a href="Timer.html#~event:pause">pause</a></li><li><a href="Timer.html#~event:start">start</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sat Nov 07 2015 13:40:32 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sun Nov 08 2015 00:24:11 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

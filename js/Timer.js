@@ -31,44 +31,125 @@ define([
          *  @constructor
          *  @function
          *  @memberof Timer.prototype
-         *  @param {Object} args
-         *  @param {number} args.minutes The number of minutes the timer should
+         *  @param {Object} [args]
+         *  @param {number} [args.minutes=0] The number of minutes the timer should
          *      start at.
+         *  @param {?number} [args.lowerBound=0] The lower bound of the timer.
+         *      If the timer is counting down, this is where it will stop.
+         *      Set to a non-finite value for no lower bound.
+         *  @param {?number} [args.upperBound=null] The upper bound of the timer.
+         *      If the timer is counting up, this is where it will stop.
+         *      Set to a non-finite value for no upper bound.
          */
         constructor: function (args) {
             args = args || {};
             /**
              *  Whether the timer is paused or running.
-             *  @name paused
+             *  @name _paused
+             *  @private
              *  @type {boolean}
              *  @memberof Timer.prototype
              */
-            this.paused = false;
+            this._paused = false;
+            this._increment = args.increment  || -1;
+            this.lowerBound = args.lowerBound || 0;
+            this.upperBound = args.upperBound || null;
             /**
              *  The number of seconds left on the timer.
-             *  @name  seconds
+             *  @name  _seconds
+             *  @private
              *  @type {number}
              *  @memberof Timer.prototype
              */
-            this.seconds = Math.round((args.minutes || 1) * 60);
+            this.setTime(args || 0);
         },
 
+        postCreate: function () {
+            this.inherited(arguments);
+            this.renderTime();
+
+            // Make sure, if timer is already running, subsequent calls don't
+            //   go through and mess things up
+            var _runTimerBase = this.runTimer;
+            this.runTimer = _.once(this.runTimer);
+            this.on("pause, end", function () {
+                this.runTimer = _.once(_runTimerBase);
+            });
+        },
+
+        /**
+         *  Sets the time currently showing on the timer.
+         *  @memberOf Timer.prototype
+         *  @param {number|object} newTime
+         */
+        setTime: function (newTime) {
+            var seconds;
+            if (_.isObject(newTime)) {
+                seconds = newTime.seconds || 0;
+                seconds += (newTime.minutes || 0) * 60;
+                seconds += (newTime.hours || 0) * 60 * 60;
+                seconds += (newTime.days || 0) * 24 * 60 * 60;
+            } else {
+                seconds = newTime.valueOf();
+            }
+            this._seconds = Math.round(seconds);
+        },
+
+        /**
+         *  Fired when the timer starts running.
+         *  @event Timer~start
+         */
+        /**
+         *  Fires when the timer is paused, ie. it has stopped running but
+         *  not yet hit its upper or lower bound.
+         *  @event Timer~pause
+         */
+        /**
+         *  Fires when the timer stops because it has hit an upper or
+         *  lower bound.
+         *  @event Timer~end
+         */
         /**
          *  Starts running the timer.
          *  @memberof Timer.prototype
          */
         runTimer: function() {
             var self = this;
+            this._paused = false;
+            var interval = 1000 * Math.abs(this._increment);
+            function inBounds(seconds) {
+                return (!_.isFinite(self.lowerBound) || seconds > self.lowerBound) &&
+                    (!_.isFinite(self.upperBound) || seconds < self.upperBound);
+            }
+
             this.emit("start");
-            setTimeout(function decrement() {
-                self.seconds -= 1;
-                if (!self.paused && self.seconds > 0) {
-                    setTimeout(decrement, 1000);
+            setTimeout(function increment() {
+                self._seconds += self._increment;
+                if (!self._paused && inBounds(self._seconds)) {
+                    setTimeout(increment, interval);
                 } else {
                     self.emit(self.paused ? "pause" : "end");
                 }
                 self.renderTime();
-            }, 1000);
+            }, interval);
+        },
+
+        /**
+         *  Runs the timer as a countdown.
+         *  @memberOf Timer.prototype
+         */
+        countDown: function () {
+            this._increment = -Math.abs(this._increment);
+            this.runTimer();
+        },
+
+        /**
+         *  Runs the timer, counting up.
+         *  @memberOf Timer.prototype
+         */
+        countUp: function () {
+            this._increment = Math.abs(this._increment);
+            this.runTimer();
         },
 
         /**
@@ -76,7 +157,7 @@ define([
          *  @memberof Timer.prototype
          */
         stopTimer: function() {
-            this.paused = true;
+            this._paused = true;
         },
 
         /**
@@ -85,7 +166,7 @@ define([
          *  @memberof Timer.prototype
          */
         renderTime: function() {
-            this.timeArea.innerHTML = this._formatTime(this.seconds);
+            this.timeArea.innerHTML = this._formatTime(this._seconds);
         },
 
         /**
@@ -100,7 +181,7 @@ define([
          *  @return {string}
          */
         _formatTime: function (seconds) {
-            var str = "";
+            var str = (seconds < 0) ? "-" : "";
             function stringify(num) {
                 return ((str != "" && num < 10) ? "0" : "") + num.toString();
             }

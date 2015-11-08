@@ -59,44 +59,125 @@
          *  @constructor
          *  @function
          *  @memberof Timer.prototype
-         *  @param {Object} args
-         *  @param {number} args.minutes The number of minutes the timer should
+         *  @param {Object} [args]
+         *  @param {number} [args.minutes=0] The number of minutes the timer should
          *      start at.
+         *  @param {?number} [args.lowerBound=0] The lower bound of the timer.
+         *      If the timer is counting down, this is where it will stop.
+         *      Set to a non-finite value for no lower bound.
+         *  @param {?number} [args.upperBound=null] The upper bound of the timer.
+         *      If the timer is counting up, this is where it will stop.
+         *      Set to a non-finite value for no upper bound.
          */
         constructor: function (args) {
             args = args || {};
             /**
              *  Whether the timer is paused or running.
-             *  @name paused
+             *  @name _paused
+             *  @private
              *  @type {boolean}
              *  @memberof Timer.prototype
              */
-            this.paused = false;
+            this._paused = false;
+            this._increment = args.increment  || -1;
+            this.lowerBound = args.lowerBound || 0;
+            this.upperBound = args.upperBound || null;
             /**
              *  The number of seconds left on the timer.
-             *  @name  seconds
+             *  @name  _seconds
+             *  @private
              *  @type {number}
              *  @memberof Timer.prototype
              */
-            this.seconds = Math.round((args.minutes || 1) * 60);
+            this.setTime(args || 0);
         },
 
+        postCreate: function () {
+            this.inherited(arguments);
+            this.renderTime();
+
+            // Make sure, if timer is already running, subsequent calls don't
+            //   go through and mess things up
+            var _runTimerBase = this.runTimer;
+            this.runTimer = _.once(this.runTimer);
+            this.on("pause, end", function () {
+                this.runTimer = _.once(_runTimerBase);
+            });
+        },
+
+        /**
+         *  Sets the time currently showing on the timer.
+         *  @memberOf Timer.prototype
+         *  @param {number|object} newTime
+         */
+        setTime: function (newTime) {
+            var seconds;
+            if (_.isObject(newTime)) {
+                seconds = newTime.seconds || 0;
+                seconds += (newTime.minutes || 0) * 60;
+                seconds += (newTime.hours || 0) * 60 * 60;
+                seconds += (newTime.days || 0) * 24 * 60 * 60;
+            } else {
+                seconds = newTime.valueOf();
+            }
+            this._seconds = Math.round(seconds);
+        },
+
+        /**
+         *  Fired when the timer starts running.
+         *  @event Timer~start
+         */
+        /**
+         *  Fires when the timer is paused, ie. it has stopped running but
+         *  not yet hit its upper or lower bound.
+         *  @event Timer~pause
+         */
+        /**
+         *  Fires when the timer stops because it has hit an upper or
+         *  lower bound.
+         *  @event Timer~end
+         */
         /**
          *  Starts running the timer.
          *  @memberof Timer.prototype
          */
         runTimer: function() {
             var self = this;
+            this._paused = false;
+            var interval = 1000 * Math.abs(this._increment);
+            function inBounds(seconds) {
+                return (!_.isFinite(self.lowerBound) || seconds > self.lowerBound) &amp;&amp;
+                    (!_.isFinite(self.upperBound) || seconds &lt; self.upperBound);
+            }
+
             this.emit("start");
-            setTimeout(function decrement() {
-                self.seconds -= 1;
-                if (!self.paused &amp;&amp; self.seconds > 0) {
-                    setTimeout(decrement, 1000);
+            setTimeout(function increment() {
+                self._seconds += self._increment;
+                if (!self._paused &amp;&amp; inBounds(self._seconds)) {
+                    setTimeout(increment, interval);
                 } else {
                     self.emit(self.paused ? "pause" : "end");
                 }
                 self.renderTime();
-            }, 1000);
+            }, interval);
+        },
+
+        /**
+         *  Runs the timer as a countdown.
+         *  @memberOf Timer.prototype
+         */
+        countDown: function () {
+            this._increment = -Math.abs(this._increment);
+            this.runTimer();
+        },
+
+        /**
+         *  Runs the timer, counting up.
+         *  @memberOf Timer.prototype
+         */
+        countUp: function () {
+            this._increment = Math.abs(this._increment);
+            this.runTimer();
         },
 
         /**
@@ -104,7 +185,7 @@
          *  @memberof Timer.prototype
          */
         stopTimer: function() {
-            this.paused = true;
+            this._paused = true;
         },
 
         /**
@@ -113,7 +194,7 @@
          *  @memberof Timer.prototype
          */
         renderTime: function() {
-            this.timeArea.innerHTML = this._formatTime(this.seconds);
+            this.timeArea.innerHTML = this._formatTime(this._seconds);
         },
 
         /**
@@ -128,7 +209,7 @@
          *  @return {string}
          */
         _formatTime: function (seconds) {
-            var str = "";
+            var str = (seconds &lt; 0) ? "-" : "";
             function stringify(num) {
                 return ((str != "" &amp;&amp; num &lt; 10) ? "0" : "") + num.toString();
             }
@@ -162,13 +243,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="App.html">App</a></li><li><a href="ChatBox.html">ChatBox</a></li><li><a href="Editor.html">Editor</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="EventQueue.html">EventQueue</a></li><li><a href="InfoBar.html">InfoBar</a></li><li><a href="InterfaceManager.html">InterfaceManager</a></li><li><a href="Interviewer.html">Interviewer</a></li><li><a href="Phrase.html">Phrase</a></li><li><a href="Timer.html">Timer</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="App.html">App</a></li><li><a href="ChatBox.html">ChatBox</a></li><li><a href="Editor.html">Editor</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="EventQueue.html">EventQueue</a></li><li><a href="InfoBar.html">InfoBar</a></li><li><a href="InterfaceManager.html">InterfaceManager</a></li><li><a href="Interviewer.html">Interviewer</a></li><li><a href="Phrase.html">Phrase</a></li><li><a href="Timer.html">Timer</a></li></ul><h3>Events</h3><ul><li><a href="Timer.html#~event:end">end</a></li><li><a href="Timer.html#~event:pause">pause</a></li><li><a href="Timer.html#~event:start">start</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sat Nov 07 2015 13:40:31 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sun Nov 08 2015 00:24:10 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

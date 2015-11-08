@@ -212,7 +212,7 @@ define([
          */
         getNextQuestion: function () {
             this.getNextQuestionOr(function () {
-                console.log("ERROR IN Interviewer.getNextQuestion()");
+                console.error("NO MORE QUESTIONS LEFT TO GET.");
             });
         },
 
