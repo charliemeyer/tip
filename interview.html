@@ -13,7 +13,9 @@
             tlmSiblingOfDojo: false,
             packages: [
                 {name: "js",   location: "js"},
-                {name: "util", location: "js/util"}
+                {name: "sim",  location: "js/sim"},
+                {name: "util", location: "js/util"},
+                {name: "lib",  location: "js/lib"}
             ]
         };
     </script>
@@ -21,10 +23,10 @@
     <script type="text/javascript" src="js/mespeak/mespeak.js"></script>
     <script type="text/javascript">
         // Parse the HTML and start up the application.
-        require(["dojo/parser", "dojo/promise/all", "js/App", "dojo/text!js/app.json", "dijit/layout/ContentPane", "dijit/layout/BorderContainer", "dojo/domReady!"],
+        require(["dojo/parser", "dojo/promise/all", "js/App", "dojo/text!sim/app.json", "dijit/layout/ContentPane", "dijit/layout/BorderContainer", "dojo/domReady!"],
             function (parser, all, App, config) {
 
-            require(["js/media"], function (media) {
+            require(["sim/media"], function (media) {
                 media.load();
             });
 

@@ -2,7 +2,7 @@ define([
         "dojo/_base/declare",
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
-        "dojo/text!js/templates/infobar.html"
+        "dojo/text!sim/widgets/templates/infobar.html"
     ], function (
         declare,
         _WidgetBase,

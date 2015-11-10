@@ -4,7 +4,7 @@ define([
         "dojo/Evented",
         "dojo/Deferred",
         "dojo/promise/all",
-        "util/lodash"
+        "lib/lodash"
     ], function (
         declare,
         lang,

@@ -1,35 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: Phrase.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Source: Phrase.js</h1>
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>define([
+define([
         "dojo/_base/declare",
         "dojo/string",
-        "util/lodash"
+        "lib/lodash"
     ], function (
         declare,
         string,
@@ -39,11 +11,11 @@
     /**
      *  A Phrase is something that can be said, and is represented
      *  nondeterministically.  Conceptually, a phrase is one of:
-     *  &lt;ul>
-     *      &lt;li>A string&lt;/li>
-     *      &lt;li>A list of (sub-)phrases to be combined&lt;/li>
-     *      &lt;li>A list of phrases to be chosen from&lt;/li>
-     *  &lt;/ul>
+     *  <ul>
+     *      <li>A string</li>
+     *      <li>A list of (sub-)phrases to be combined</li>
+     *      <li>A list of phrases to be chosen from</li>
+     *  </ul>
      *  A phrase also has context, which evaluates variables within the phrase.
      *  When the phrase is evaluated, the context will be searched to fill in
      *  variables of the form ${var}.  Context values may be either phrases
@@ -110,9 +82,9 @@
      *          "name": {"choose": ["Colin", "Samantha", "Julius", "Julia"]},
      *          "greeting": function () {
      *              var hour = new Date().getHours();
-     *              if (hour &lt; 12) {
+     *              if (hour < 12) {
      *                  return "Good morning";
-     *              } else if (hour &lt; 17) {
+     *              } else if (hour < 17) {
      *                  return "Good afternoon";
      *              } else {
      *                  return "Good evening";
@@ -135,7 +107,7 @@
     /**
      *  An object representing the context of a phrase.  Binds names to
      *  Phrase values or functions that produce Phrase values.
-     *  @typedef {Object.&lt;string, (Phrase|function(string):Phrase)>}
+     *  @typedef {Object.<string, (Phrase|function(string):Phrase)>}
      *      Phrase~Context
      */
     var Phrase = declare(null, {
@@ -146,16 +118,16 @@
          *  @function
          *  @param {string|Array|Object} phrase A representation of a phrase.
          *      Such a representation is defined recursively as one of:
-         *      &lt;ul>
-         *          &lt;li>A string literal&lt;/li>
-         *          &lt;li>An array of phrase representations&lt;/li>
-         *          &lt;li>An object with key "choose", whose value is an array of
-         *              phrase representations&lt;/li>
-         *      &lt;/ul>
+         *      <ul>
+         *          <li>A string literal</li>
+         *          <li>An array of phrase representations</li>
+         *          <li>An object with key "choose", whose value is an array of
+         *              phrase representations</li>
+         *      </ul>
          *      These will be mapped directly to the corresponding types in the
-         *      abstract definition of a phrase.&lt;br />
-         *      Note that modifying the object passed in &lt;strong>will&lt;/strong>
-         *      modify the representation of the Phrase object as well.&lt;br />
+         *      abstract definition of a phrase.<br />
+         *      Note that modifying the object passed in <strong>will</strong>
+         *      modify the representation of the Phrase object as well.<br />
          *      Sequences of the form ${name} within a phrase will be
          *      substituted with a value based on the phrase's context.
          *  @param {Phrase~Context} [context] The context in which to bind the
@@ -241,7 +213,7 @@
                 return _.reduce(phrase, function (soFar, current) {
                     return soFar + this._phraseToString(current);
                 }, "", this);
-            } else if (_.isObject(phrase) &amp;&amp; _.isArray(phrase["choose"])) {
+            } else if (_.isObject(phrase) && _.isArray(phrase["choose"])) {
                 return this._phraseToString(_.sample(phrase["choose"]));
             } else {
                 return string.substitute(phrase, this._context, function (v) {
@@ -256,26 +228,3 @@
 
     return Phrase;
 });
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="App.html">App</a></li><li><a href="ChatBox.html">ChatBox</a></li><li><a href="Editor.html">Editor</a></li><li><a href="Endscreen.html">Endscreen</a></li><li><a href="EventQueue.html">EventQueue</a></li><li><a href="InfoBar.html">InfoBar</a></li><li><a href="InterfaceManager.html">InterfaceManager</a></li><li><a href="Interviewer.html">Interviewer</a></li><li><a href="Phrase.html">Phrase</a></li><li><a href="Timer.html">Timer</a></li></ul><h3>Events</h3><ul><li><a href="Timer.html#~event:end">end</a></li><li><a href="Timer.html#~event:pause">pause</a></li><li><a href="Timer.html#~event:start">start</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Sun Nov 08 2015 00:24:10 GMT-0500 (EST)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>

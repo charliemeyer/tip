@@ -1,7 +1,7 @@
 {
     "components": {
         "interfaceManager": {
-            "create": "js/interfaceManager",
+            "create": "sim/components/interfaceManager",
             "connect": {
                 "_chatBox": "chatBox",
                 "_timer"  : "timer",
@@ -11,7 +11,7 @@
             }
         },
         "interviewer": {
-            "create": "js/Interviewer",
+            "create": "sim/components/Interviewer",
             "connect": {
                 "_textBox": "chatBox",
                 "_timer"  : "timer",
@@ -21,25 +21,25 @@
             }
         },
         "chatBox": {
-            "create": "js/ChatBox",
+            "create": "sim/widgets/ChatBox",
             "params": {
                 "defaultTimeOut": 300000
             }
         },
         "timer": {
-            "create": "js/Timer",
+            "create": "sim/widgets/Timer",
             "params": {
                 "minutes": 15
             }
         },
         "editor": {
-            "create": "js/Editor"
+            "create": "sim/widgets/Editor"
         },
         "questionPrompt": {
-            "create": "js/InfoBar"
+            "create": "sim/widgets/InfoBar"
         },
         "endscreen": {
-            "create": "js/Endscreen",
+            "create": "sim/widgets/Endscreen",
             "connect": {
                 "_timer": "timer",
                 "_editor": "editor"

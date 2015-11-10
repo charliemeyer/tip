@@ -4,11 +4,11 @@ define([
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
         "dijit/_OnDijitClickMixin",
-        "dojo/text!js/templates/endscreen.html",
+        "dojo/text!sim/widgets/templates/endscreen.html",
         "dojo/dom",
         "dojo/dom-style",
         "dojo/on",
-        "util/lodash"
+        "lib/lodash"
     ], function (
         declare,
         lang,

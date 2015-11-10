@@ -4,14 +4,14 @@ define([
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
         "dijit/_OnDijitClickMixin",
-        "dojo/text!js/templates/editor.html",
-        "dojo/text!js/languages.json",
+        "dojo/text!sim/widgets/templates/editor.html",
+        "dojo/text!sim/config/languages.json",
         "dojo/request",
         "dojo/string",
         "dojo/dom-style",
         "dojo/on",
-        "js/media",
-        "util/lodash"
+        "sim/media",
+        "lib/lodash"
     ], function (
         declare,
         lang,
